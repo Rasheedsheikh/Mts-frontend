@@ -33,7 +33,7 @@ const RegisterLanding = () => {
         <Card
           title="User Registration"
           description="Create your account to book services quickly."
-          onClick={() => navigate('/signup')}
+          // onClick={() => navigate('/signup')}
         />
         <Card
           title="Quick Booking"
