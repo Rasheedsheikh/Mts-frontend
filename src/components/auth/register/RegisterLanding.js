@@ -2,9 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegisterLanding.css';
 
-const Card = ({ title, description, onClick }) => {
+const Card = ({ title, description, onClick, tagText }) => {
   return (
     <div className="reg-card" onClick={onClick} role="button" tabIndex={0}>
+      {tagText && (
+        <div className="reg-tag-wrap" aria-label={tagText}>
+          <span className="reg-tag-chain" />
+          <span className="reg-tag">{tagText}</span>
+        </div>
+      )}
       <div className="reg-card-title">{title}</div>
       <div className="reg-card-desc">{description}</div>
     </div>
@@ -34,6 +40,7 @@ const RegisterLanding = () => {
           title="User Registration"
           description="Create your account to book services quickly."
           // onClick={() => navigate('/signup')}
+          tagText="Launching Soon"
         />
         <Card
           title="Quick Booking"

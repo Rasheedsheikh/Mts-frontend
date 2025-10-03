@@ -206,6 +206,7 @@ function PopularServicesSection() {
         </a>
       </div>
       <div className="popularBox">
+        <div className="popularHangingTag">Launching Soon</div>
         <div className="popularServiceFlex">
           <div className="popularServiceLeft">
             <div className="popularServiceTitlemini popularBlue">Daily Needs</div>

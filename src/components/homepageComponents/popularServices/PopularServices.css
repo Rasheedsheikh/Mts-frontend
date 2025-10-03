@@ -228,7 +228,7 @@ color:#05B6FA
 }
 
 .popularCustomerImg {
-  width: 360px; /* larger on laptop/desktop */
+  width: 360px; /* default desktop size (will be overridden below) */
   height: auto;
   object-fit: contain;
   margin-bottom: 12px;
@@ -264,6 +264,40 @@ color:#05B6FA
   @media (max-width: 320px) {
     max-width: 180px;
     height: 140px;
+  }
+}
+
+/* Large screens: make inner card fill the outer customer card */
+@media (min-width: 1025px) {
+  .popularCustomerCard {
+    padding: 35px 30px; /* keep original spacing */
+    position: relative;
+  }
+  .popularCustomerCard .popularCard {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    border-radius: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .popularCustomerImg {
+    width: 100% !important;
+    height: auto !important;
+    max-height: calc(100% - 48px); /* leave space for label */
+    object-fit: contain; /* fit nicely without cropping */
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .popularCustomerLabel {
+    position: static;
+    transform: none;
+    background: transparent;
+    padding: 8px 0;
   }
 }
 
@@ -303,6 +337,7 @@ color:#05B6FA
   border-radius: 24px;
   box-shadow: 0 2px 10px 0 rgba(16, 55, 66, 0.07);
   padding: 24px 20px;
+  position: relative;
 }
 
 .popularServiceFlex {
@@ -438,6 +473,13 @@ color:#05B6FA
   }
 }
 
+/* Prevent mid-word breaks for category labels specifically in the categories grid */
+.popularCategoryGrid .popularCardLabel {
+  hyphens: none;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
 .popularServiceCards {
   display: flex;
   gap: 18px;
@@ -468,6 +510,50 @@ color:#05B6FA
   border: none;
   border-top: 1.5px solid #f5f5f8;
   margin: 18px 0 18px 0;
+}
+
+/* Hanging Tag for Popular Services big card */
+.popularHangingTag {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: #ff3b30;
+  color: #ffffff;
+  font-family: 'Work Sans';
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+}
+
+.popularHangingTag:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 12px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #ff3b30; /* small hanging triangle */
+}
+
+@media (max-width: 768px) {
+  .popularHangingTag {
+    top: -8px;
+    right: 12px;
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  .popularHangingTag:after {
+    right: 10px;
+    border-left-width: 7px;
+    border-right-width: 7px;
+    border-top-width: 7px;
+  }
 }
 
 /* Customers grid */
