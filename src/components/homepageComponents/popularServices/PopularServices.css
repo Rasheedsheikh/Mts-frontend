@@ -228,17 +228,23 @@ color:#05B6FA
 }
 
 .popularCustomerImg {
-  width: 310px;
-  height: 310px;
+  width: 360px; /* larger on laptop/desktop */
+  height: auto;
   object-fit: contain;
   margin-bottom: 12px;
   max-width: 100%;
-  height: auto;
   border-radius: 8px;
 
+  @media (max-width: 1400px) {
+    width: 340px;
+  }
+
+  @media (max-width: 1250px) {
+    width: 300px;
+  }
+
   @media (max-width: 1024px) {
-    width: 280px;
-    height: 280px;
+    width: 260px;
   }
 
   @media (max-width: 768px) {

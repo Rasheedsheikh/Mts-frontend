@@ -306,6 +306,7 @@ const RightSliderWrapper = styled.div`
 
 const AdsSliderContent = styled.div`
   display: flex;
+  height: 100%;
   transition: transform 0.5s ease-in-out;
   transform: translateX(-${props => props.$currentIndex * 100}%);
 `;
@@ -315,7 +316,7 @@ const AdsSlide = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto; /* fill wrapper height */
+  height: 100%;
 
   @media (max-width: 992px) {
     min-height: 400px;
@@ -332,8 +333,8 @@ const AdsSlide = styled.div`
 
 const AdsSlideImage = styled.img`
   width: 100%;
-  height: 100%;
   flex: 1 1 auto;
+  min-height: 0;
   object-fit: cover;
 `;
 
@@ -667,32 +668,41 @@ const Dot = styled.button`
 
 // --- Data for Sliders ---
 const productsSlides = [
-  { id: 1, image: 'https://images.wsj.net/im-65599456?size=1.5https://www.conradpune.com/wp-content/uploads/elementor/thumbs/1-8-pswvh5j9lcihi56uuj9gun5ioocukcetkfh2rb2t1s.png' },
-  { id: 2, image: 'https://amgglobaltrading.com/assets/images/electonic-banner.jpg' },
-  { id: 3, image: 'https://content.jdmagicbox.com/comp/guntur/i9/9999px863.x863.210727153552.t5i9/catalogue/ssp-brew-pub-reddypalem-guntur-pubs-cl5fs56zkz.jpg' },
+  {
+    id: 1,
+    image: 'https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=1600&auto=format&fit=crop',
+  },
+  {
+    id: 2,
+    image: 'https://amgglobaltrading.com/assets/images/electonic-banner.jpg',
+  },
+  {
+    id: 3,
+    image: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=1600&auto=format&fit=crop',
+  },
 ];
 
 const adsSlides = [
   {
     id: 1,
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    title: 'Boost Your Business',
-    description: 'Reach thousands of local customers with our targeted advertising solutions',
-    buttonText: 'Get Started'
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop',
+    title: 'Advertise with MTS',
+    description: 'Promote your business locally and reach ready-to-buy customers.',
+    buttonText: 'Start Advertising'
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    title: 'Premium Services',
-    description: 'Connect with verified service providers in your area',
-    buttonText: 'Explore Now'
+    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop',
+    title: 'Verified Providers',
+    description: 'Find trusted, verified professionals near you in minutes.',
+    buttonText: 'Find Providers'
   },
   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    title: 'Join Our Community',
-    description: 'Be part of India\'s fastest growing local services platform',
-    buttonText: 'Join Today'
+    image: 'https://images.unsplash.com/photo-1556742393-d75f468bfcb0?q=80&w=1600&auto=format&fit=crop',
+    title: 'Quick Booking',
+    description: 'Book top services instantly. No hassle, no waiting.',
+    buttonText: 'Book Now'
   },
 ];
 
