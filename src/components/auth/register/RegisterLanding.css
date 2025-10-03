@@ -1,0 +1,77 @@
+.register-landing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.register-landing-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 8px 0 4px;
+  text-align: center;
+}
+
+.register-landing-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.register-landing-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.reg-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 140px;
+  box-shadow: 0 2px 8px rgba(16, 55, 66, 0.07);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+
+.reg-card:hover {
+  box-shadow: 0 5px 16px rgba(22, 147, 207, 0.12);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.reg-card-title {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.reg-card-desc {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+@media (max-width: 1024px) {
+  .register-landing-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .register-landing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .register-landing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+

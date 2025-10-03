@@ -1,0 +1,156 @@
+.login-full-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  /* Background styling */
+  background-image: url('../../../assets/auth/Light-Blue-blur-background1.webp'); /* Update with your image path */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-full-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  filter: blur(8px); /* Blur effect */
+  z-index: 1;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+  z-index: 2; /* Ensures content is above the blurred background */
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-main-title {
+  color: #007bff;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+}
+
+.login-card-container {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.login-illustration-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-illustration-section img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.divider {
+  width: 1px;
+  background-color: #ddd;
+  margin: 20px 0;
+}
+
+.login-form-section {
+  flex: 1;
+  padding: 80px;
+}
+
+.login-form-title {
+  color: #007bff;
+  margin-bottom: 25px;
+}
+
+.login-form-group {
+  margin-bottom: 20px;
+}
+
+.login-form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.login-form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.login-form-group input.input-error {
+  border-color: #dc3545;
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: 5px;
+}
+
+.forgot-password {
+  display: block;
+  text-align: right;
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9em;
+  margin-bottom: 25px;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.login-button-group {
+  margin-top: 20px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .login-card-container {
+    flex-direction: column;
+  }
+  .login-illustration-section, .divider {
+    display: none;
+  }
+  .login-form-section {
+    padding: 20px;
+  }
+}

@@ -1,0 +1,301 @@
+/* Footer.css */
+
+/* Main footer container */
+.main-footer-container {
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 40px 20px;
+    color: #495057; /* Dark gray text */
+    font-family: 'Epilogue', sans-serif; /* Use the Epilogue font */
+    border-top: 1px solid #e9ecef; /* Subtle top border */
+    box-sizing: border-box;
+    width: 100%;
+
+    @media (max-width: 1024px) {
+        padding: 35px 15px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 30px 12px;
+    }
+
+    @media (max-width: 480px) {
+        padding: 25px 10px;
+    }
+
+    @media (max-width: 320px) {
+        padding: 20px 8px;
+    }
+}
+
+/* Wrapper for the columns */
+.footer-content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto; /* Center the content */
+    gap: 30px; /* Space between columns */
+
+    @media (max-width: 1024px) {
+        gap: 25px;
+        max-width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    @media (max-width: 640px) {
+        gap: 25px;
+    }
+
+    @media (max-width: 480px) {
+        gap: 20px;
+    }
+}
+
+/* Individual footer column */
+.footer-column {
+    flex: 1; /* Each column takes equal space */
+    min-width: 220px; /* Minimum width to prevent columns from getting too narrow */
+
+    @media (max-width: 1024px) {
+        min-width: 200px;
+    }
+
+    @media (max-width: 768px) {
+        min-width: auto;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 480px) {
+        margin-bottom: 15px;
+    }
+}
+
+/* Headings for each column */
+.footer-heading {
+    font-family: 'Epilogue';
+    font-weight: 500;
+    font-style: 'SemiBold';
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    color: #05B6FA;
+    margin-bottom: 15px;
+
+    @media (max-width: 768px) {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 320px) {
+        font-size: 15px;
+    }
+}
+
+/* Logo container and image */
+.footer-logo {
+    margin-bottom: 20px;
+}
+
+.footer-logo img {
+    max-width: 150px;
+    height: auto;
+
+    @media (max-width: 768px) {
+        max-width: 130px;
+    }
+
+    @media (max-width: 480px) {
+        max-width: 110px;
+    }
+
+    @media (max-width: 320px) {
+        max-width: 100px;
+    }
+}
+
+/* Social icons */
+.social-icons {
+    display: flex;
+    gap: 15px; /* Space between icons */
+    margin-top: 20px;
+}
+
+.social-icon-link {
+    color: #495057;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.social-icon-link:hover {
+    color: #00b0f0; /* Blue color on hover */
+}
+
+/* Footer links */
+.footer-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    font-family: 'Work Sans';
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    color: black;
+    line-height: 140%;
+    letter-spacing: 0%;
+    transition: color 0.3s ease;
+    display: block;
+    padding: 2px 0;
+
+    @media (max-width: 768px) {
+        font-size: 15px;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 14px;
+    }
+
+    @media (max-width: 320px) {
+        font-size: 13px;
+    }
+}
+
+.footer-links a:hover {
+    color: #00b0f0;
+}
+
+/* Contact information column */
+.contact-column .contact-info {
+    font-style: normal; /* Remove italic from address tag */
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.contact-icon {
+    color: #00b0f0;
+    margin-right: 10px;
+    font-size: 1.1rem;
+    flex-shrink: 0; /* Prevents icon from shrinking on smaller screens */
+}
+
+.contact-item span {
+    font-family: 'Work Sans';
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 16px;
+    color: black;
+    line-height: 140%;
+    letter-spacing: 0%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
+    @media (max-width: 768px) {
+        font-size: 15px;
+        line-height: 145%;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 14px;
+        line-height: 150%;
+    }
+
+    @media (max-width: 320px) {
+        font-size: 13px;
+    }
+}
+
+/* Copyright section */
+.footer-copyright {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    font-size: 0.9rem;
+    color: #6c757d; /* Lighter color for copyright text */
+}
+
+/* Enhanced responsive adjustments */
+@media (max-width: 768px) {
+    .social-icons {
+        justify-content: center; /* Center social icons on mobile */
+        gap: 20px;
+    }
+
+    .contact-item {
+        justify-content: center;
+        text-align: left;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+
+    .footer-links {
+        text-align: center;
+    }
+
+    .footer-logo {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .social-icons {
+        gap: 15px;
+    }
+
+    .social-icon-link {
+        font-size: 1.1rem;
+    }
+
+    .contact-item {
+        margin-bottom: 10px;
+    }
+
+    .contact-icon {
+        font-size: 1rem;
+    }
+
+    .footer-copyright {
+        font-size: 0.85rem;
+        margin-top: 30px;
+        padding-top: 15px;
+    }
+}
+
+@media (max-width: 320px) {
+    .social-icons {
+        gap: 12px;
+    }
+
+    .social-icon-link {
+        font-size: 1rem;
+    }
+
+    .footer-copyright {
+        font-size: 0.8rem;
+        margin-top: 25px;
+        padding-top: 12px;
+    }
+}

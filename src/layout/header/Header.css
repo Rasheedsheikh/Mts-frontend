@@ -1,0 +1,213 @@
+/* Header.css */
+
+
+
+/* Ensure the body and root container take up the full viewport height */
+
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background-color: #fff; /* White background as in the image */
+  border-bottom: 1px solid #f0f0f0;
+  height: 64px; /* Default Ant Design header height */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box;
+
+  @media (max-width: 1024px) {
+    padding: 0 15px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 12px;
+    height: 60px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 10px;
+    height: 56px;
+  }
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px; /* Adjust as needed */
+  width: 110px;
+  margin-left: 2%;
+
+  @media (max-width: 768px) {
+    height: 50px;
+    width: 95px;
+    margin-left: 0;
+  }
+
+  @media (max-width: 480px) {
+    height: 45px;
+    width: 85px;
+  }
+
+  @media (max-width: 320px) {
+    height: 40px;
+    width: 75px;
+  }
+}
+
+.header-menu.ant-menu {
+  flex-grow: 1; /* Allow menu to take available space */
+  justify-content: flex-end; /* Push menu items to the right */
+  border-bottom: none;
+  font-family: 'Epilogue';
+font-weight: 500;
+
+font-size: 14px;
+
+line-height: 100%;
+letter-spacing: 0%;
+
+ /* Remove default Ant Design border */
+}
+
+.header-menu .ant-menu-item {
+  margin: 0 10px; /* Spacing between menu items */
+}
+
+.header-menu .ant-menu-item-selected {
+  background-color: #e6f7ff; /* Highlight for selected item */
+  border-radius: 4px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  align-items: center;
+}
+
+.login-button {
+  background-color: #00b0f0; /* Blue color from the image */
+  border-color: #00b0f0;
+  color: white;
+  font-size: 14px;
+  padding: 6px 16px;
+  height: auto;
+
+  @media (max-width: 1024px) {
+    font-size: 13px;
+    padding: 5px 14px;
+  }
+}
+
+.login-button:hover {
+  background-color: #009ad6; /* Darker blue on hover */
+  border-color: #009ad6;
+  color: white;
+}
+
+.register-button {
+  background-color: #fff; /* White background from the image */
+  border-color: #e0e0e0; /* Light border */
+  color: #00b0f0; /* Blue text */
+  font-size: 14px;
+  padding: 6px 16px;
+  height: auto;
+
+  @media (max-width: 1024px) {
+    font-size: 13px;
+    padding: 5px 14px;
+  }
+}
+
+.register-button:hover {
+  border-color: #00b0f0;
+  color: #00b0f0;
+}
+
+/* --- Responsive Styles --- */
+
+/* Hide mobile-specific elements on desktop */
+.mobile-only {
+  display: none;
+}
+
+/* Hide desktop-specific elements on mobile */
+.desktop-only {
+  display: flex; /* Keep it flex for proper alignment on desktop */
+}
+
+/* Enhanced responsive styles */
+@media (max-width: 1024px) {
+  .header-menu .ant-menu-item {
+    margin: 0 8px;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+}
+
+/* Media query for tablets */
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none; /* Hide desktop menu and actions */
+  }
+
+  .mobile-only {
+    display: block; /* Show mobile menu button */
+  }
+
+  .app-header {
+    justify-content: space-between; /* Space out logo and menu button */
+    padding: 0 15px;
+  }
+
+  .mobile-drawer .ant-menu-vertical {
+    border-right: none; /* Remove default Ant Design border */
+  }
+
+  .mobile-drawer .ant-menu-item {
+    margin: 10px 0; /* Add vertical spacing for mobile menu items */
+  }
+
+  .mobile-drawer .login-button,
+  .mobile-drawer .register-button {
+    width: 100%; /* Full width buttons in drawer */
+    margin-top: 10px;
+  }
+
+  .menu-button {
+    font-size: 18px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0 10px;
+  }
+
+  .menu-button {
+    font-size: 16px;
+    padding: 4px 8px;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 320px) {
+  .app-header {
+    padding: 0 8px;
+  }
+
+  .menu-button {
+    font-size: 14px;
+    padding: 2px 6px;
+  }
+}

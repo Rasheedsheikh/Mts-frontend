@@ -1,0 +1,395 @@
+/* --- Global Reset / Base Styles (Optional, but good practice) --- */
+
+/* body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+} */
+
+.home-page-wrapper {
+    /* background-color: #f0f8ff;  */
+    padding: 40px 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px; /* Space between each major section */
+}
+
+
+
+/* --- Main Wrapper --- */
+
+
+@media (max-width: 768px) {
+    .home-page-wrapper {
+        padding: 30px 15px;
+        gap: 30px;
+    }
+}
+
+/* --- Section Header Styles (Common for all sections) --- */
+/* Styling for the section header container */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* For smaller screens, stack the title/subtitle and the link */
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* Adds space between stacked elements */
+  }
+}
+
+/* Styling for the title (h2) within the header */
+.section-header h2 {
+  font-family: 'Epilogue', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #007bff;
+  margin: 0;
+}
+
+/* Styling for the subtitle (p) within the header */
+.section-header p {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #555;
+  margin: 5px 0 0 0;
+}
+
+/* Styling for the "Explore more" link */
+.explore-more-link {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 600;
+  color: #007bff;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+}
+
+/* Hover effect for the link */
+.explore-more-link:hover {
+  text-decoration: underline;
+}
+
+
+/* --- Card Grid / Container Styles (Common for For Customers & Popular Services wrapper) --- */
+.card-grid {
+    display: flex; /* Use flex for horizontal layout initially */
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px; /* Space between cards */
+    width: 100%;
+    max-width: 1200px; /* Match section header max-width */
+    flex-wrap: wrap; /* Allow cards to wrap to the next line */
+}
+
+@media (max-width: 1024px) {
+    .card-grid {
+        gap: 15px;
+    }
+}
+@media (max-width: 768px) {
+    .card-grid {
+        flex-wrap: wrap; /* Always wrap on smaller screens */
+        justify-content: center; /* Center cards when wrapped */
+    }
+}
+
+/* --- General Card Styles --- */
+.card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+    width: 100%; /* Max width within card */
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.card span {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 15px;
+    }
+    .card span {
+        font-size: 1rem;
+    }
+}
+
+/* --- Specific Styles for "For Customers" Cards --- */
+.customer-card {
+    /* Inherits from .card but overrides some properties */
+    width: 30%; /* Approx 3 cards per row */
+    max-width: 350px; /* Max width for consistency */
+    border: none; /* Default no border */
+    display: flex;
+    flex-direction: column;
+}
+
+.customer-card.highlighted {
+    border: 2px solid #007bff; /* Highlight border */
+}
+
+.customer-card img {
+    width: 80%; /* Adjust image size for these cards */
+    max-height: 180px; /* Limit image height */
+}
+
+@media (max-width: 1024px) {
+    .customer-card {
+        width: 45%; /* 2 cards per row on tablets */
+    }
+}
+@media (max-width: 768px) {
+    .customer-card {
+        width: 90%; /* Single card per row on mobiles */
+        max-width: 320px; /* Keep a max width for single column */
+    }
+}
+
+/* --- Specific Styles for "Popular Services" Grid Items --- */
+.popular-services-sections {
+    flex-direction: column; /* Stack categories within this section */
+    gap: 20px; /* Gap between PopularServiceCategory items */
+}
+
+.popular-service-category {
+    width: 100%;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+}
+
+@media (max-width: 768px) {
+    .popular-service-category {
+        padding: 20px;
+    }
+}
+
+.category-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.category-header h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+.category-header p {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 10px;
+}
+.category-header .explore-more-link {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .category-header {
+        align-items: center;
+        text-align: center;
+    }
+}
+
+.service-item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Responsive grid */
+    gap: 15px;
+    justify-items: center; /* Center items in their grid cells */
+}
+
+@media (max-width: 480px) {
+    .service-item-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+}
+
+.service-item {
+    /* Inherits from .card, overrides some properties */
+    width: 100%; /* Take full width of grid cell */
+    height: 120px; /* Fixed height for consistency */
+    padding: 10px; /* Smaller padding */
+    box-shadow: none; /* No shadow for these smaller items */
+    border: 1px solid #eee; /* Light border */
+}
+
+.service-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.service-item img {
+    width: 60px; /* Smaller icons */
+    height: 60px;
+    margin-bottom: 5px;
+}
+.service-item span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+@media (max-width: 480px) {
+    .service-item {
+        height: 100px;
+    }
+    .service-item img {
+        width: 50px;
+        height: 50px;
+    }
+    .service-item span {
+        font-size: 0.8rem;
+    }
+}
+
+/* --- Categories Section Specific Styles --- */
+.categories-scroll-container {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scroll-behavior: smooth; /* Smooth scroll on button click */
+    padding-bottom: 15px; /* Space for scrollbar */
+    gap: 20px; /* Space between category cards */
+    width: 100%;
+    max-width: 1200px; /* Match overall section width */
+}
+
+/* Hide scrollbar for most browsers */
+.categories-scroll-container {
+    scrollbar-width: none; /* Firefox */
+}
+.categories-scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+@media (max-width: 768px) {
+    .categories-scroll-container {
+        padding-bottom: 10px;
+        gap: 15px;
+        justify-content: flex-start; /* Ensure items start from left on scroll */
+    }
+}
+
+.category-card {
+    /* Inherits from .card, overrides some properties */
+    flex-shrink: 0; /* Prevent cards from shrinking */
+    width: 120px; /* Fixed width for category cards */
+    height: 140px; /* Fixed height */
+    padding: 15px;
+    box-shadow: none; /* No shadow */
+    border: 1px solid #eee; /* Light border */
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Highlight specific card */
+.category-card.highlighted {
+    border: 2px solid #007bff;
+    color: #007bff;
+}
+
+.category-card img {
+    width: 60px; /* Icon size */
+    height: 60px;
+    margin-bottom: 10px;
+}
+.category-card span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+@media (max-width: 480px) {
+    .category-card {
+        width: 100px;
+        height: 120px;
+    }
+    .category-card img {
+        width: 50px;
+        height: 50px;
+    }
+    .category-card span {
+        font-size: 0.8rem;
+    }
+}
+
+.categories-scroll-button-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1200px; /* Match section width */
+    display: flex;
+    justify-content: flex-end; /* Push button to the right */
+    margin-top: -30px; /* Pull button up to overlap with scroll container */
+}
+
+@media (max-width: 768px) {
+    .categories-scroll-button-wrapper {
+        margin-top: 10px; /* Adjust position for smaller screens */
+        justify-content: center;
+    }
+}
+
+.categories-scroll-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.3rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10; /* Ensure it's above other content */
+}
+
+.categories-scroll-button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .categories-scroll-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}

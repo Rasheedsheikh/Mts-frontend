@@ -24,6 +24,10 @@
   color: white;
 }
 
+.site-layout-content {
+  margin-top: 64px; /* push down below header */
+}
+
 .App-link {
   color: #61dafb;
 }

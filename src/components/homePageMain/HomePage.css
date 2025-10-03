@@ -1,0 +1,129 @@
+/* HomePage.css - Responsive styles for the entire homepage */
+
+.homepage-container {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-top: 64px; /* Account for fixed header */
+  background-color: #fafbfc;
+  overflow-x: hidden;
+}
+
+/* Responsive padding adjustments */
+@media (max-width: 1200px) {
+  .homepage-container {
+    padding-top: 64px;
+  }
+}
+
+@media (max-width: 768px) {
+  .homepage-container {
+    padding-top: 60px; /* Smaller header on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage-container {
+    padding-top: 56px; /* Even smaller header on small mobile */
+  }
+}
+
+/* Ensure smooth scrolling */
+.homepage-container {
+  scroll-behavior: smooth;
+}
+
+/* Global responsive utilities */
+.homepage-container * {
+  box-sizing: border-box;
+}
+
+/* Prevent horizontal scroll on small devices */
+.homepage-container {
+  max-width: 100vw;
+}
+
+/* Spacing between sections */
+.homepage-container > * {
+  margin-bottom: 0;
+}
+
+.homepage-container > *:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .homepage-container > *:not(:last-child) {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage-container > *:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+/* Container width management */
+@media (max-width: 1400px) {
+  .homepage-container {
+    max-width: 100%;
+  }
+}
+
+/* Text selection styling */
+.homepage-container ::selection {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Focus styles for accessibility */
+.homepage-container *:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Button focus styles */
+.homepage-container button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Loading state (if needed) */
+.homepage-container.loading {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .homepage-container {
+    background-color: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .homepage-container {
+    scroll-behavior: auto;
+  }
+  
+  .homepage-container * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .homepage-container {
+    background-color: white;
+    padding-top: 0;
+  }
+  
+  .homepage-container * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}

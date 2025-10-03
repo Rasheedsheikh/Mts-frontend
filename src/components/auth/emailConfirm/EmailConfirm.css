@@ -1,0 +1,151 @@
+.emailConfirm-full-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  /* Background styling */
+  background-image: url('../../../assets/auth/Light-Blue-blur-background1.webp'); /* Update with your image path */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.verify-email-container {
+ width: 100%;
+ max-width: 1200px;
+ padding: 20px;
+}
+
+.verify-email-header {
+ text-align: center;
+ margin-bottom: 30px;
+}
+
+
+.verify-email-title {
+ color: #007bff;
+ font-weight: 600;
+}
+
+.verify-email-card-container {
+ display: flex;
+ background-color: #fff;
+ border-radius: 12px;
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+ overflow: hidden;
+}
+
+.verify-email-illustration-section {
+ flex: 1;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+}
+
+.verify-email-form-section {
+ flex: 1;
+ padding: 80px;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+.divider {
+  width: 1px;
+  background-color: #ddd;
+  margin: 20px 0;
+}
+
+.verify-email-form-title {
+ color: #007bff;
+ margin-bottom: 5px;
+}
+
+.verify-email-subtitle {
+ color: #6c757d;
+ margin-bottom: 25px;
+ font-size: 0.9em;
+ text-align: center;
+}
+
+.verification-code-input-group {
+ display: flex;
+ gap: 10px;
+ margin-bottom: 20px;
+}
+
+.verification-code-input {
+ width: 50px;
+ height: 50px;
+ text-align: center;
+ font-size: 1.5em;
+ border: 1px solid #ddd;
+ border-radius: 6px;
+ box-sizing: border-box;
+}
+
+.verification-code-input.input-error {
+ border-color: #dc3545;
+}
+
+.error-text {
+ color: #dc3545;
+ font-size: 0.875em;
+ margin-top: 5px;
+}
+
+.verify-email-button-group {
+ margin-top: 20px;
+ text-align: center;
+ width: 100%;
+}
+
+.verify-button {
+ width: 100%;
+ padding: 12px 25px;
+ border: none;
+ border-radius: 6px;
+ font-weight: bold;
+ cursor: pointer;
+ background-color: #007bff;
+ color: #fff;
+ transition: background-color 0.3s ease;
+}
+
+.verify-button:hover {
+ background-color: #0056b3;
+}
+
+.resend-code {
+ display: block;
+ text-align: center;
+ color: #007bff;
+ text-decoration: none;
+ font-size: 0.9em;
+ margin-top: 15px;
+}
+
+.resend-code:hover {
+ text-decoration: underline;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+ .verify-email-card-container {
+ flex-direction: column;
+ align-items: center;
+ }
+ .verify-email-illustration-section {
+ display: none; /* Hide the illustration on mobile */
+ }
+ .verify-email-form-section {
+ padding: 20px;
+ align-items: stretch;
+ }
+ .verification-code-input-group {
+ justify-content: center;
+ }
+}
