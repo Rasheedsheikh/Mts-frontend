@@ -69,7 +69,7 @@ const Advertise = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${Base_url}/advertisements`, data, {
+      const response = await axios.post(`${Base_url}/advertisement-registration`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
