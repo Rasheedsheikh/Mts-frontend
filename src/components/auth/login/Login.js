@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import './Login.css';
 import login from "../../../assets/auth/Frame (13).png";
 import { useNavigate } from 'react-router-dom';
+import { Base_url } from '../../../constants/constant';
 
 const Login = () => {
-
-    const navigate= useNavigate()
+  const navigate = useNavigate();
   const [loginData, setLoginData] = useState({
     userName: '',
     password: '',
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,26 +26,58 @@ const Login = () => {
     let tempErrors = {};
     if (!loginData.userName) tempErrors.userName = "User Name is required.";
     if (!loginData.password) tempErrors.password = "Password is required.";
-    
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      console.log('Login data submitted:', loginData);
-      alert('Login Successful!');
-    } else {
-      console.log('Validation failed.');
+    if (!validate()) return;
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(`${Base_url}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: loginData.userName, // backend expects 'email' or adjust if it's 'userName'
+          password: loginData.password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(errorData.message || "Invalid credentials");
+        setLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("role", data.user.role);
+      localStorage.setItem("email", data.user.email);
+      localStorage.setItem("userId", data.user.id);
+
+      alert("Login Successful!");
+
+      // ✅ Redirect based on role
+      const userRole = data.user.role?.toLowerCase();
+      if (userRole === "admin") navigate("/");
+      else if (userRole === "/") navigate("/");
+      else navigate("/");
+
+    } catch (error) {
+      console.error("Login Error:", error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
-    console.log('Forgot Password clicked.');
-    alert('Navigating to Forgot Password page...');
-    navigate('/forgotPassword')
+    navigate('/forgotPassword');
   };
 
   return (
@@ -74,6 +107,7 @@ const Login = () => {
                 />
                 {errors.userName && <p className="error-text">{errors.userName}</p>}
               </div>
+
               <div className="login-form-group">
                 <label htmlFor="password">Password*</label>
                 <input
@@ -87,12 +121,14 @@ const Login = () => {
                 />
                 {errors.password && <p className="error-text">{errors.password}</p>}
               </div>
+
               <a href="#" className="forgot-password" onClick={handleForgotPassword}>
                 Forgot Password?
               </a>
+
               <div className="login-button-group">
-                <button type="submit" className="login-button">
-                  Login
+                <button type="submit" className="login-button" disabled={loading}>
+                  {loading ? "Logging in..." : "Login"}
                 </button>
               </div>
             </form>

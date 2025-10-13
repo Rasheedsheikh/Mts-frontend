@@ -75,6 +75,7 @@ const forCustomers = [
   {
     label: 'MTS will also do digital platform',
     image: digitalPlatform,
+    route:`/digitalMarketing`,
   },
 ];
 

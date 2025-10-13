@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./ServiceListing.css";
+import axios from "axios";
+import { Base_url } from "../../constants/constant";
 
 const initialServices = [
   // Auto Care Services
@@ -299,12 +301,136 @@ const servicesList = initialServices;
 
 const ServicesListing=()=> {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [location, setLocation] = useState("");
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("");
+  const [services, setServices] = useState([]); // default is empty array
+const [category, setCategory] = useState(""); // default empty string
+const [search, setSearch] = useState("");
+const [location, setLocation] = useState("");
+const [sort, setSort] = useState("");
   const [showVerified, setShowVerified] = useState(false);
   const [minRating, setMinRating] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [servicesListing, setServicesList]= useState([]);
+  const [error, setError]= useState('')
+  const [isAdmin, setIsAdmin]= useState(false)
+  useEffect(() => {
+        const checkAdminStatus = () => {
+            // 1. Retrieve the role string from Local Storage
+            // NOTE: Change 'userRole' if your key is different (e.g., 'role', 'authRole')
+            const storedRole = localStorage.getItem('role'); 
+
+            // 2. Define the admin role value(s)
+            const ADMIN_ROLE_VALUE = 'admin'; // Use the exact string your backend sends for admin
+
+            // 3. Set the state
+            if (storedRole && storedRole.toLowerCase() === ADMIN_ROLE_VALUE) {
+                setIsAdmin(true);
+            } else {
+                setIsAdmin(false);
+            }
+        };
+        checkAdminStatus();
+    
+    }, []); 
+   
+
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+   const [formData, setFormData] = useState({
+    businessName: '',
+    businessOwnerName: '',
+    mobileNumber: '',
+    whatsappNumber: '',
+    category: '',
+    shopImage: null,
+    address:''
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  // 🔹 Handle text input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // 🔹 Handle image file change
+  const handleFileChange = (e) => {
+    setFormData(prev => ({ ...prev, shopImage: e.target.files[0] }));
+  };
+
+  // 🔹 Reset form
+  const handleCancel = () => {
+    setFormData({
+     businessName: '',
+    businessOwnerName: '',
+    mobileNumber: '',
+    whatsappNumber: '',
+    category: '',
+    shopImage: null,
+    address:''
+    });
+    setIsModalOpen(false);
+  };
+
+  // 🔹 Handle submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Basic validation
+    if (!formData.businessName || !formData.mobileNumber || !formData.address) {
+      alert('Please fill all required fields.');
+      return;
+    }
+
+const data = new FormData();
+    data.append("businessName", formData.businessName);
+    data.append("businessOwnerName", formData.businessOwnerName);
+    data.append("mobileNumber", formData.mobileNumber);
+    data.append("whatsappNumber", formData.whatsappNumber);
+    data.append("category", formData.category);
+    data.append("address", formData.address);
+  if (formData.shopImage) data.append("image", formData.shopImage);
+
+    setLoading(true);
+    try {
+      const response = await axios.post(`${Base_url}/merchant-details/add-service`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      console.log('✅ Service created:', response.data);
+      alert('Service created successfully!');
+      handleCancel();
+    } catch (error) {
+      console.error('❌ Error:', error);
+      alert(error.response?.data?.message || 'Error creating Service');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // ✅ Replace with your actual backend URL
+        const response = await axios.get(`${Base_url}/merchant-details`);
+        console.log("✅ Services fetched:", response.data);
+
+        setServicesList( response.data || []);
+        setServices(response.data || []) // Adjust based on API structure
+      } catch (err) {
+        console.error("❌ Error fetching services:", err);
+        setError(err.response?.data?.message || "Failed to fetch services");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
   // Get category from URL parameters on component mount
   useEffect(() => {
@@ -315,19 +441,43 @@ const ServicesListing=()=> {
   }, [searchParams]);
 
   // Filtering and Sorting
-  const filteredServices = servicesList
-    .filter(
-      (s) =>
-        (!showVerified || s.verified) &&
-        s.rating >= minRating &&
-        (s.location.toLowerCase().includes(location.toLowerCase()) || location === "") &&
-        (s.title.toLowerCase().includes(search.toLowerCase()) || search === "") &&
-        (selectedCategory === "" || s.category === selectedCategory)
-    )
+  // const filteredServices = servicesList
+  //   .filter(
+  //     (s) =>
+  //       (!showVerified || s.verified) &&
+  //       s.rating >= minRating &&
+  //       (s.location.toLowerCase().includes(location.toLowerCase()) || location === "") &&
+  //       (s.title.toLowerCase().includes(search.toLowerCase()) || search === "") &&
+  //       (selectedCategory === "" || s.category === selectedCategory)
+  //   )
+  //   .sort((a, b) => {
+  //     if (sort === "ratingHigh") return b.rating - a.rating;
+  //     if (sort === "ratingLow") return a.rating - b.rating;
+  //     if (sort === "titleAsc") return a.title.localeCompare(b.title);
+  //     return 0;
+  //   });
+
+   
+   
+const filteredServices = services
+.filter(s => {
+  // Category filter: USE selectedCategory instead of category
+  const categoryMatch = !selectedCategory || s.category?.toLowerCase() === selectedCategory.toLowerCase(); 
+
+  // Search filter
+  const searchMatch = !search || s.businessName?.toLowerCase().includes(search.toLowerCase());
+
+  // Location filter
+  const locationMatch = !location || s.address?.toLowerCase().includes(location.toLowerCase());
+
+  return categoryMatch && searchMatch && locationMatch;
+})
+
     .sort((a, b) => {
-      if (sort === "ratingHigh") return b.rating - a.rating;
-      if (sort === "ratingLow") return a.rating - b.rating;
-      if (sort === "titleAsc") return a.title.localeCompare(b.title);
+      if (sort === "nameAsc")
+        return a.businessName.localeCompare(b.businessName);
+      if (sort === "nameDesc")
+        return b.businessName.localeCompare(a.businessName);
       return 0;
     });
 
@@ -337,17 +487,15 @@ const ServicesListing=()=> {
   const handleSortChange = (e) => setSort(e.target.value);
   const handleVerifiedChange = () => setShowVerified((v) => !v);
   const handleRatingChange = (e) => setMinRating(Number(e.target.value));
-  const handleCategoryChange = (e) => {
-    const newCategory = e.target.value;
-    setSelectedCategory(newCategory);
-    
-    // Update URL parameters
-    if (newCategory) {
-      setSearchParams({ category: newCategory });
-    } else {
-      setSearchParams({});
-    }
-  };
+const handleCategoryChange = (e) => {
+  const newCategory = e.target.value;
+  setSelectedCategory(newCategory); // 👈 This is the one you are setting
+
+  // Add this line to make the filter work
+  setCategory(newCategory); // 👈 This is the one the filter is reading
+  
+  // ...
+};
 
   return (
     <div className="servicespage-container">
@@ -417,6 +565,11 @@ const ServicesListing=()=> {
             <option value={4.5}>4.5+</option>
           </select>
         </div>
+        {isAdmin &&(
+         <button className="add-service-btn" onClick={() => setIsModalOpen(true)}>
+          ➕ Add Service
+        </button>
+        )}
       </div>
       {filteredServices.length === 0 && (
         <div style={{ color: "#db4444", marginTop: "20px" }}>
@@ -426,40 +579,131 @@ const ServicesListing=()=> {
       {filteredServices.map((service) => (
         <div className="servicespage-card" key={service.id}>
           <img
-            src={service.img}
+            src={service.shopImage}
             className="servicespage-card-image"
-            alt={service.title}
+            alt={service.businessName}
           />
           <div className="servicespage-card-details">
             <div className="servicespage-card-title-row">
-              <span className="servicespage-card-title">{service.title}</span>
-              <span className="servicespage-card-rating">{service.rating} ★</span>
-              {service.verified && (
+              <span className="servicespage-card-title">{service.businessName}</span>
+              <span className="servicespage-card-rating">5 ★</span>
+             
                 <span className="servicespage-card-verified">
                   MTS Verified ✔️
                 </span>
-              )}
             </div>
-            <div className="servicespage-card-location">{service.location}</div>
+            <div className="servicespage-card-location">{service.address}</div>
             <div className="servicespage-card-tags">
-              {service.tags.map((tag, i) => (
+              {/* {(service.tags || []).map((tag, i) => (
                 <span className="servicespage-card-tag" key={i}>
                   {tag}
                 </span>
-              ))}
+              ))} */}
+                  <span className="servicespage-card-tag">
+                  {service.category}
+                </span>
+              
             </div>
             <div className="servicespage-card-actions">
               <a href={`tel:${service.phone}`} className="servicespage-card-call">
-                {service.phone}
+                {service.mobileNumber}
               </a>
-              <button className="servicespage-card-whatsapp">WhatsApp</button>
+              <button className="servicespage-card-whatsapp"><a style={{}}
+  href={`https://wa.me/91${service.whatsappNumber || service.mobileNumber}?text=${encodeURIComponent(
+    `Hello ${service.businessName}, I am interested in your services and would like to know more.`
+  )}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  WhatsApp
+</a></button>
               <button className="servicespage-card-enquiry">Send Enquiry</button>
             </div>
           </div>
         </div>
       ))}
+
+
+
+        {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Add New Service</h3>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                name="businessName"
+                value={formData.businessName}
+                onChange={handleChange}
+                placeholder="Business Name*"
+                required
+              />
+              <input
+                type="text"
+                name="businessOwnerName"
+                value={formData.businessOwnerName}
+                onChange={handleChange}
+                placeholder="Business Owner Name"
+              />
+              <input
+                type="text"
+                name="mobileNumber"
+                value={formData.mobileNumber}
+                onChange={handleChange}
+                placeholder="Mobile Number*"
+                required
+              />
+              <input
+                type="text"
+                name="whatsappNumber"
+                value={formData.whatsappNumber}
+                onChange={handleChange}
+                placeholder="WhatsApp Number"
+              />
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="Auto Care">Auto Care</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Cleaning">Cleaning</option>
+                <option value="Beauty">Beauty</option>
+                <option value="Plumber">Plumber</option>
+                <option value="Training">Training</option>
+              </select>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="Address*"
+                required
+              />
+              <input type="file" accept="image/*" onChange={handleFileChange} />
+
+              <div className="modal-buttons">
+                <button type="button" onClick={handleCancel}>
+                  Cancel
+                </button>
+                <button type="submit" disabled={loading}>
+                  {loading ? "Saving..." : "Submit"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
-  );
-}
+
+ 
+    
+
+    );
+  };
 
 export default ServicesListing;

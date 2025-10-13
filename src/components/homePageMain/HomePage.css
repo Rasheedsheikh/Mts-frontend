@@ -4,7 +4,7 @@
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
-  padding-top: 64px; /* Account for fixed header */
+  padding-top: 9px; /* Account for fixed header */
   background-color: #fafbfc;
   overflow-x: hidden;
 }

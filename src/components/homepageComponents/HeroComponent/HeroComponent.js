@@ -178,7 +178,7 @@ const HeroComponent = () => {
     <HeroSection>
       <ContentWrapper>
         <Heading>
-          Search for anything, anywhere in <Highlight>India</Highlight>
+      Search for any Business, any service in <Highlight>India</Highlight>
         </Heading>
         <SearchContainer>
           <LocationInput>
@@ -188,7 +188,7 @@ const HeroComponent = () => {
             <StyledInput type="text" placeholder="Hyderabad" />
           </LocationInput>
           <InputGroup>
-            <StyledInput type="text" placeholder="Search anything" />
+            <StyledInput type="text" placeholder="Search anything" style={{border:"none",   outline:"none"}} />
             <Icon>
               <FaMicrophone />
             </Icon>

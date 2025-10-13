@@ -41,7 +41,6 @@ const Footer = () => {
         <div className="footer-column">
           <h3 className="footer-heading">Support</h3>
           <ul className="footer-links">
-            <li><a href="#">Free Listing</a></li>
             <li><a href="#">All Categories</a></li>
             <li><a href="#">Franchise</a></li>
             <li><a href="#">Advertise</a></li>
@@ -59,11 +58,11 @@ const Footer = () => {
             </div>
             <div className="contact-item">
               <FaPhoneAlt className="contact-icon" />
-              <span>9618487387</span>
+              <span>724024099</span>
             </div>
             <div className="contact-item">
               <FaEnvelope className="contact-icon" />
-              <span>mtsindiaid999@gmail.com</span>
+              <span>mytownservice@hotmail.com</span>
             </div>
           </address>
         </div>

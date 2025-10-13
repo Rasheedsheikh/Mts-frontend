@@ -43,7 +43,7 @@ const RegisterLanding = () => {
           tagText="Launching Soon"
         />
         <Card
-          title="Quick Booking"
+          title="Free Booking"
           description="Skip registration and book a service instantly."
           onClick={() => navigate('/quickBooking')}
         />

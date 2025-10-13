@@ -25,6 +25,7 @@ import AllServices from './components/allServices/AllServices';
 import QuickBooking1 from './components/registrations/quickBooking/QuickBooking1';
 import QuickBooking2 from './components/registrations/quickBooking/QuickBooking2';
 import Advertise from './components/registrations/advertise/Advertise';
+import DigitalPlatform from './components/registrations/digitalPlatform/DigitalPlatform';
 // import PaymentGateway2 from './components/registrations/payments/paymentGateway2';
 
 
@@ -78,6 +79,7 @@ function AppContent() {
              <Route path='/merchantRegistration2' element={<MerchantRegistration2/>}/>
                <Route path='/payment' element={<PaymentGateway/>}/>
                    <Route path='/vendorStep1' element={<Vendorstep1/>}/>
+                   <Route path='/digitalMarketing' element={<DigitalPlatform/>}/>
                    {/* <Route path='/payment2' element={<PaymentGateway2/>}/> */}
                   <Route path='/listAll' element={<AllServices/>}/>
              <Route path='/serviceListing' element={<ServicesListing/>}/>

@@ -1,23 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Button, Dropdown, Space, Drawer } from 'antd';
 import { MenuOutlined, GlobalOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
-import mtsLogo from "../../assets/Frame 427318348.png"
-
-// const { Header } = Layout;
+import mtsLogo from "../../assets/IMG-20250710-WA0000 1 (1).png";
 
 const Header = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  const showDrawer = () => {
-    setDrawerVisible(true);
-  };
+  // ✅ Check login state when component mounts
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token); // true if token exists
+  }, []);
 
-  const onCloseDrawer = () => {
-    setDrawerVisible(false);
-  };
+  // ✅ Update login state when localStorage changes (for other tabs)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem('token'));
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const showDrawer = () => setDrawerVisible(true);
+  const onCloseDrawer = () => setDrawerVisible(false);
 
   const languageMenu = (
     <Menu>
@@ -45,8 +54,19 @@ const Header = () => {
     onCloseDrawer();
   };
 
+  const handleLogout = () => {
+    // ✅ Clear localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('email');
+    localStorage.removeItem('userId');
+
+    // ✅ Update state + redirect
+    setIsLoggedIn(false);
+    navigate('/login');
+  };
+
   return (
-    // No need for a wrapping Layout here, as it will be used in App.js
     <div className="app-header">
       <div className="logo-container">
         <Link to="/">
@@ -54,15 +74,14 @@ const Header = () => {
         </Link>
       </div>
 
+      {/* ✅ Desktop Menu */}
       <Menu mode="horizontal" defaultSelectedKeys={['home']} className="header-menu desktop-only">
         {renderMenuItem('home', 'Home', '/')}
-        {renderMenuItem('quick-booking', 'Quick Booking', '/quickBooking')}
-        {/* {renderMenuItem('free-listing', 'Free Listing', '/free-listing')} */}
+        {renderMenuItem('quick-booking', 'Free Booking', '/quickBooking')}
         {renderMenuItem('advertise', 'Advertise', '/advertise')}
-
         <Menu.Item key="language">
           <Dropdown overlay={languageMenu} placement="bottomRight">
-            <a onClick={e => e.preventDefault()} className="ant-dropdown-link">
+            <a onClick={(e) => e.preventDefault()} className="ant-dropdown-link">
               <Space>
                 <GlobalOutlined /> EN
               </Space>
@@ -71,11 +90,32 @@ const Header = () => {
         </Menu.Item>
       </Menu>
 
+      {/* ✅ Desktop Actions */}
       <div className="header-actions desktop-only">
-        <Button type="primary" className="login-button" onClick={handleLoginClick}>Login</Button>
-        <Button className="register-button" onClick={handleRegisterClick}>Register</Button>
+        {isLoggedIn ? (
+          <div>
+          <Button type="primary" className="logout-button" onClick={handleLogout}>
+            Logout
+          </Button>
+          
+
+             <Button className="register-button" onClick={handleRegisterClick}>
+              Register
+            </Button>
+            </div>
+        ) : (
+          <>
+            <Button type="primary" className="login-button" onClick={handleLoginClick}>
+              Login
+            </Button>
+            <Button className="register-button" onClick={handleRegisterClick}>
+              Register
+            </Button>
+          </>
+        )}
       </div>
 
+      {/* ✅ Mobile Menu Drawer */}
       <div className="mobile-only">
         <Button type="text" onClick={showDrawer} className="menu-button">
           <MenuOutlined />
@@ -92,29 +132,47 @@ const Header = () => {
       >
         <Menu mode="vertical" defaultSelectedKeys={['home']}>
           {renderMenuItem('home', 'Home', '/')}
-          {renderMenuItem('quick-booking', 'Quick Booking', '/quick-booking')}
-          {renderMenuItem('free-listing', 'Free Listing', '/free-listing')}
+          {renderMenuItem('quick-booking', 'Free Booking', '/quick-booking')}
           {renderMenuItem('advertise', 'Advertise', '/advertise')}
 
           <Menu.Item key="language-mobile">
             <Dropdown overlay={languageMenu} placement="bottomLeft">
-              <a onClick={e => e.preventDefault()} className="ant-dropdown-link">
+              <a onClick={(e) => e.preventDefault()} className="ant-dropdown-link">
                 <Space>
                   <GlobalOutlined /> EN
                 </Space>
               </a>
             </Dropdown>
           </Menu.Item>
-          <Menu.Item key="login-mobile">
-            <Button type="primary" block className="login-button" onClick={handleLoginClick}>Login</Button>
-          </Menu.Item>
-          <Menu.Item key="register-mobile">
-            <Button block className="register-button" onClick={handleRegisterClick}>Register</Button>
-          </Menu.Item>
+
+          {/* ✅ Dynamic Login/Logout for Mobile */}
+          {isLoggedIn ? (
+            <Menu.Item key="logout-mobile">
+              <Button type="primary" block className="register-button" onClick={handleLogout}>
+                Logout
+              </Button>
+
+                <Button block className="register-button" onClick={handleRegisterClick}>
+                  Register
+                </Button>
+            </Menu.Item>
+          ) : (
+            <>
+              <Menu.Item key="login-mobile">
+                <Button type="primary" block className="register-button" onClick={handleLoginClick}>
+                  Login
+                </Button>
+              </Menu.Item>
+              <Menu.Item key="register-mobile">
+                <Button block className="register-button" onClick={handleRegisterClick}>
+                  Register
+                </Button>
+              </Menu.Item>
+            </>
+          )}
         </Menu>
       </Drawer>
     </div>
-    
   );
 };
 

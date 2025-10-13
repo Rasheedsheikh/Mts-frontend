@@ -1,192 +1,192 @@
 import React, { useState } from 'react';
-import './Advertise.css'; // Import the CSS file
-// import { ReactComponent as ClipboardIllustration } from './clipboard.svg'; 
-// Assuming you have a clipboard.svg
-import quickbook from "../../../assets/register/5354443_2760424 1 (1).png"
-
+import axios from 'axios';
+import './Advertise.css';
+import quickbook from "../../../assets/register/5354443_2760424 1 (1).png";
+import { Base_url } from '../../../constants/constant';
 
 const Illustration = () => (
- <div className="illustration-wrapper">
- <img src={quickbook} alt="Verify Your Email Illustration" style={{ maxWidth: '100%', height: 'auto' }} />
- </div>
+  <div className="illustration-wrapper">
+    <img
+      src={quickbook}
+      alt="Advertise Illustration"
+      style={{ maxWidth: '100%', height: 'auto' }}
+    />
+  </div>
 );
 
-const categories = [
-    'Auto Care',
-    'Laptops',
-    'Washing Machine',
-    'Cleaning',
-    'Other Services'
-];
-
-const shops = [
-    'Tech Repair Shop A',
-    'MTS Auto Service',
-    'Sparkling Cleaners',
-    'General Services'
-];
-
 const Advertise = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        mobile: '',
-        message: '',
-        category: '',
-        shop: ''
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    location: '',
+    startDate: '',
+    endDate: '',
+    image: null,
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  // 🔹 Handle text input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // 🔹 Handle image file change
+  const handleFileChange = (e) => {
+    setFormData(prev => ({ ...prev, image: e.target.files[0] }));
+  };
+
+  // 🔹 Reset form
+  const handleCancel = () => {
+    setFormData({
+      title: '',
+      description: '',
+      location: '',
+      startDate: '',
+      endDate: '',
+      image: null,
     });
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
+  // 🔹 Handle submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Form data submitted:', formData);
-        alert('Form submitted successfully!');
-        setFormData({
-            name: '',
-            email: '',
-            mobile: '',
-            message: '',
-            category: '',
-            shop: ''
-        });
-    };
+    // Basic validation
+    if (!formData.title || !formData.location) {
+      alert('Please fill all required fields.');
+      return;
+    }
 
-    const handleCancel = () => {
-        setFormData({
-            name: '',
-            email: '',
-            mobile: '',
-            message: '',
-            category: '',
-            shop: ''
-        });
-        console.log('Form data reset.');
-    };
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('description', formData.description);
+    data.append('location', formData.location);
+    if (formData.startDate) data.append('startDate', formData.startDate);
+    if (formData.endDate) data.append('endDate', formData.endDate);
+    if (formData.image) data.append('image', formData.image);
 
-    return (
-        <div className='booking-parent1'>
-        <div className="booking-container">
-            <h1 className="main-title">Advertise</h1>
-            <p className="subtitle">Stay ahead of the competition – Get your ad on My Town Service! </p>
-            <div className="content-wrapper">
-                <div className="illustration-section">
-                    <Illustration/>
-                    {/* <ClipboardIllustration className="illustration-image" /> */}
-                </div>
-                <div className='divider'></div>
-                <div className="form-section">
-                    <h2 className="form-title">Your Details Please</h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="name"> Company Name*</label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                placeholder="name@example"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+    setLoading(true);
+    try {
+      const response = await axios.post(`${Base_url}/advertisements`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-                         <div className="form-group">
-                            <label htmlFor="name"> City*</label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                placeholder="name@example"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+      console.log('✅ Advertisement created:', response.data);
+      alert('Advertisement created successfully!');
+      handleCancel();
+    } catch (error) {
+      console.error('❌ Error:', error);
+      alert(error.response?.data?.message || 'Error creating advertisement');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                         <div className="form-group">
-                            <label htmlFor="name"> Title*</label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                placeholder="name@example"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email">Email*</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder="name@example"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="mobile">Mobile Number*</label>
-                            <input
-                                type="tel"
-                                id="mobile"
-                                name="mobile"
-                                placeholder="name@example"
-                                value={formData.mobile}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="category">Category*</label>
-                            <select
-                                id="category"
-                                name="category"
-                                value={formData.category}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="" disabled>Select a category</option>
-                                {categories.map(cat => (
-                                    <option key={cat} value={cat}>{cat}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="shop">Shop*</label>
-                            <select
-                                id="shop"
-                                name="shop"
-                                value={formData.shop}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="" disabled>Select a shop</option>
-                                {shops.map(shop => (
-                                    <option key={shop} value={shop}>{shop}</option>
-                                ))}
-                            </select>
-                        </div>
-                      
-                        <div className="button-group">
-                            <button type="button" className="btn btn-cancel" onClick={handleCancel}>Cancel</button>
-                            <button type="submit" className="btn btn-send">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  return (
+    <div className='booking-parent1'>
+      <div className="booking-container">
+        <h1 className="main-title">Advertise With Us</h1>
+        <p className="subtitle">Promote your brand — get featured on My Town Service!</p>
+
+        <div className="content-wrapper">
+          <div className="illustration-section">
+            <Illustration />
+          </div>
+
+          <div className='divider'></div>
+
+          <div className="form-section">
+            <h2 className="form-title">Advertisement Details</h2>
+
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="title">Title*</label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  placeholder="Ad Title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Description</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  placeholder="Enter ad details..."
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows="3"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="location">Location*</label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  placeholder="Homepage Banner / Sidebar / etc."
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="startDate">Start Date</label>
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="endDate">End Date</label>
+                <input
+                  type="date"
+                  id="endDate"
+                  name="endDate"
+                  value={formData.endDate}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="image">Upload Image*</label>
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  required
+                />
+              </div>
+
+              <div className="button-group">
+                <button type="button" className="btn btn-cancel" onClick={handleCancel}>
+                  Reset
+                </button>
+                <button type="submit" className="btn btn-send" disabled={loading}>
+                  {loading ? 'Submitting...' : 'Submit'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Advertise;

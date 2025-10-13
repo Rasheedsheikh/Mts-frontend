@@ -72,7 +72,7 @@ const QuickBooking2 = () => {
 
     return (
         <div className="booking-container">
-            <h1 className="main-title">Quick Booking</h1>
+            <h1 className="main-title">Free Booking</h1>
           
            
                 <div className="illustration-section">

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FaMapMarkerAlt, FaMicrophone, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { getAdvertisements, deleteAdvertisement, createAdvertisement } from '../../../apis/Advertisements';
+import { useNavigate } from 'react-router-dom';
 
 // --- Main Container for the entire component ---
 const MainContainer = styled.div`
@@ -38,7 +40,7 @@ const MainContainer = styled.div`
 const LeftSideContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 30px; 
   width: 60%;
   
   @media (max-width: 1200px) {
@@ -667,7 +669,7 @@ const Dot = styled.button`
 
 
 // --- Data for Sliders ---
-const productsSlides = [
+const initialProductsSlides = [
   {
     id: 1,
     image: 'https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=1600&auto=format&fit=crop',
@@ -682,7 +684,7 @@ const productsSlides = [
   },
 ];
 
-const adsSlides = [
+const initialAdsSlides = [
   {
     id: 1,
     image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop',
@@ -700,7 +702,7 @@ const adsSlides = [
   {
     id: 3,
     image: 'https://images.unsplash.com/photo-1556742393-d75f468bfcb0?q=80&w=1600&auto=format&fit=crop',
-    title: 'Quick Booking',
+    title: 'Free Booking',
     description: 'Book top services instantly. No hassle, no waiting.',
     buttonText: 'Book Now'
   },
@@ -709,33 +711,383 @@ const adsSlides = [
 // --- Combined Component ---
 const HeroWithSliders = () => {
   // State for location
-  const [userLocation, setUserLocation] = useState('Detecting location...');
+  // const [userLocation, setUserLocation] = useState('Detecting location...');
   const leftRef = useRef(null);
   const rightRef = useRef(null);
   const [rightHeight, setRightHeight] = useState('auto');
+
+  const [userLocation, setUserLocation] = useState('Detecting location...');
+  const [adsSlides, setAdsSlides] = useState([]);
+  const [adsCurrentIndex, setAdsCurrentIndex] = useState(0);
+  const [productsCurrentIndex, setProductsCurrentIndex]= useState(0)
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin]= useState(false);
+  const navigate= useNavigate('')
+
+   useEffect(() => {
+        const checkAdminStatus = () => {
+            // 1. Retrieve the role string from Local Storage
+            // NOTE: Change 'userRole' if your key is different (e.g., 'role', 'authRole')
+            const storedRole = localStorage.getItem('role'); 
+
+            // 2. Define the admin role value(s)
+            const ADMIN_ROLE_VALUE = 'admin'; // Use the exact string your backend sends for admin
+
+            // 3. Set the state
+            if (storedRole && storedRole.toLowerCase() === ADMIN_ROLE_VALUE) {
+                setIsAdmin(true);
+            } else {
+                setIsAdmin(false);
+            }
+        };
+        checkAdminStatus();
+    
+    }, []); 
+
+  // NEW STATE FOR THE ADD AD FORM
+    const [newAdFormData, setNewAdFormData] = useState({
+        title: '',
+        city: '',
+        imageFile: null, 
+        sliderType:''
+    });
+
+       const [newProdFormData, setNewProdFormData] = useState({
+        title: '',
+        city: '',
+        imageFile: null, 
+        sliderType:''
+    });
+
+    const handleNewAdChange = (e) => {
+        const { name, value, files } = e.target;
+
+        if (name === 'imageFile') {
+            // Clear URL if a file is chosen, and vice-versa (not shown here, but good practice)
+            setNewAdFormData({ ...newAdFormData, imageFile: files[0]}); 
+        } else {
+            setNewAdFormData({ ...newAdFormData, [name]: value });
+        }
+    };
+
+        const handleNewProdChange = (e) => {
+        const { name, value, files } = e.target;
+
+        if (name === 'imageFile') {
+            // Clear URL if a file is chosen, and vice-versa (not shown here, but good practice)
+            setNewProdFormData({ ...newProdFormData, imageFile: files[0]}); 
+        } else {
+            setNewProdFormData({ ...newProdFormData, [name]: value });
+        }
+    };
+// HeroWithSliders.jsx
+
+
+
+
+// 2. Ensure your component has the necessary state (newAdFormData, loading, adsSlides)
+
+const handleNewAdSubmit = async (e) => { // ⬅️ Must be async
+    e.preventDefault();
+
+    // 1. Basic Validation
+    // Check for imageFile OR imageUrl, not just imageFile
+    if (!newAdFormData.title || !newAdFormData.city || (!newAdFormData.imageFile && !newAdFormData.imageUrl)) {
+        alert('Please fill in at least Title, Location (City), and provide an Image file or URL.');
+        return;
+    }
+
+    // 2. Prepare Data (using FormData for API POST)
+    const data = new FormData();
+    data.append('title', newAdFormData.title);
+    data.append('description', newAdFormData.description || '');
+    // NOTE: If your API expects 'location' instead of 'city', change the key below.
+    data.append('location', newAdFormData.city); 
+    data.append('sliderType',newAdFormData.sliderType)
+    
+    // Append the file or the URL
+    if (newAdFormData.imageFile) {
+        // Use the key your backend expects for file upload (e.g., 'file' or 'image')
+        data.append('image', newAdFormData.imageFile); 
+    } else if (newAdFormData.imageUrl) {
+        data.append('image', newAdFormData.imageUrl);
+    }
+
+    setLoading(true); // Assuming you have a loading state set up
+
+    // 3. API Call to post data ⬅️ API Integration
+    try {
+        const newAdFromApi = await createAdvertisement(data); 
+
+        // 4. Success Actions: Update UI with the NEW AD data from the API response
+        setAdsSlides(prev => [...prev, newAdFromApi]);
+        
+        // Reset form data
+        setNewAdFormData({
+            title: '', description: '', city: '', buttonText: '', imageFile: null, sliderType:'',
+        });
+        
+        // Move slider to the new ad (adsSlides.length is the index of the newly added slide)
+        setAdsCurrentIndex(adsSlides.length); 
+
+        console.log('✅ Advertisement created:', newAdFromApi);
+        alert(`Ad for "${newAdFromApi.title}" successfully created!`);
+
+    } catch (error) {
+        
+        // 5. Error Handling
+        const errorMessage = error.response?.data?.message || 'Failed to create advertisement. Check API service.';
+        console.error('❌ Error creating advertisement:', error.response || error);
+        alert(errorMessage);
+
+    } finally {
+        setLoading(false);
+    }
+};
+
+
+const handleNewProdSubmit = async (e) => { // ⬅️ Must be async
+    e.preventDefault();
+
+    // 1. Basic Validation
+    // Check for imageFile OR imageUrl, not just imageFile
+    if (!newProdFormData.title || !newProdFormData.city || (!newProdFormData.imageFile && !newProdFormData.imageUrl)) {
+        alert('Please fill in at least Title, Location (City), and provide an Image file or URL.');
+        return;
+    }
+
+    // 2. Prepare Data (using FormData for API POST)
+    const data = new FormData();
+    data.append('title', newProdFormData.title);
+    data.append('description', newProdFormData.description || '');
+    // NOTE: If your API expects 'location' instead of 'city', change the key below.
+    data.append('location', newProdFormData.city); 
+    data.append('sliderType', 'Featured')
+    
+    // Append the file or the URL
+    if (newProdFormData.imageFile) {
+        // Use the key your backend expects for file upload (e.g., 'file' or 'image')
+        data.append('image', newProdFormData.imageFile); 
+    } else if (newProdFormData.imageUrl) {
+        data.append('image', newProdFormData.imageUrl);
+    }
+
+    setLoading(true); // Assuming you have a loading state set up
+
+    // 3. API Call to post data ⬅️ API Integration
+    try {
+        const newProdFromApi = await createAdvertisement(data); 
+
+        // 4. Success Actions: Update UI with the NEW AD data from the API response
+        setProductSlides(prev => [...prev, newProdFromApi]);
+        
+        // Reset form data
+        setNewProdFormData({
+            title: '', description: '', city: '', buttonText: '', imageFile: null, sliderType:'',
+        });
+        
+        // Move slider to the new ad (adsSlides.length is the index of the newly added slide)
+        setProductsCurrentIndex(productSlides.length); 
+
+        console.log('✅ Advertisement created:', newProdFromApi);
+        alert(`Ad for "${newProdFromApi.title}" successfully created!`);
+
+    } catch (error) {
+        
+        // 5. Error Handling
+        const errorMessage = error.response?.data?.message || 'Failed to create advertisement. Check API service.';
+        console.error('❌ Error creating advertisement:', error.response || error);
+        alert(errorMessage);
+
+    } finally {
+        setLoading(false);
+    }
+};
+  
+
+const fetchData = async (userLocation) => {
+    setLoading(true);
+
+    try {
+        const allAds = await getAdvertisements(); 
+
+
+        const locationFilteredAds = allAds.filter(ad =>
+            ad.location.toLowerCase() === userLocation.toLowerCase() || ad.location.toLowerCase() === 'all'
+        );
+
+        
+        const featuredProducts = [];
+        const nonFeaturedAds = [];
+
+        locationFilteredAds.forEach(ad => {
+
+            if (ad.sliderType === 'Featured') {
+                featuredProducts.push(ad);
+            } else {
+                nonFeaturedAds.push(ad);
+            }
+        });
+
+        const mappedProductSlides = featuredProducts.map(ad => ({
+        id: ad.advertisement_id, // Use advertisement_id as the unique key
+            image: ad?.imageUrl,      // Map imageUrl to image
+            title: ad.title,
+            description: ad.description,
+            city: ad.location    
+        }));
+        setProductSlides(mappedProductSlides);
+
+        const mappedAdSlides = nonFeaturedAds.map(ad => ({
+        id: ad.advertisement_id, // Use advertisement_id as the unique key
+            image: ad?.imageUrl,      // Map imageUrl to image
+            title: ad.title,
+            description: ad.description,
+
+            city: ad.location  
+        }));
+        setAdsSlides(mappedAdSlides);
+
+    } catch (err) {
+        console.error('Error fetching data:', err);
+    } finally {
+        setLoading(false);
+    }
+};
+  const handleDeleteAd = async (advertisement_id) => {
+    try {
+      await deleteAdvertisement(advertisement_id);
+      setAdsSlides(prev => prev.filter(ad => ad.advertisement_id !== advertisement_id));
+    } catch (err) {
+      console.error('Failed to delete ad:', err);
+      alert('Failed to delete advertisement');
+    }
+  };
+
+  // Get Location + Fetch Ads
+  useEffect(() => {
+    const getUserLocation = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const { latitude, longitude } = pos.coords;
+            const res = await fetch(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+            );
+            const data = await res.json();
+            const city =
+              data.city ||
+              data.locality ||
+              data.principalSubdivision ||
+              "All";
+            setUserLocation(city);
+            fetchData(city);
+          },
+          () => {
+            setUserLocation("All");
+            fetchData("All");
+          }
+        );
+      } else {
+        setUserLocation("All");
+        fetchData("All");
+      }
+    };
+    getUserLocation();
+  }, []);
+
+
+  useEffect(() => {
+  if (!userLocation || userLocation === 'Detecting location...') return;
+
+  const delay = setTimeout(() => {
+    fetchData(userLocation);
+  }, 800); // wait 0.8 sec after typing stops
+
+  return () => clearTimeout(delay);
+}, [userLocation]);
+
+
+  // 👇 Allow manual editing
+  const handleLocationChange = (e) => {
+    const value = e.target.value;
+    setUserLocation(value);
+  };
+
+  
+  
+  // Local state for slides (editable in UI)
+  const [productSlides, setProductSlides] = useState([]);
+  // const [adsSlides, setAdsSlides] = useState(initialAdsSlides);
+  const [newProductImageUrl, setNewProductImageUrl] = useState('');
+  const [newAdImageUrl, setNewAdImageUrl] = useState('');
   
   // State and logic for Products & Services Slider
-  const [productsCurrentIndex, setProductsCurrentIndex] = useState(0);
+const productsTotalSlides = productSlides?.length + (isAdmin ? 1 : 0); 
+  // const productsTotalSlides = (productSlides?.length || 0) + 1; // includes add slide
   const productsGoToPrev = () => {
-    setProductsCurrentIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : productsSlides.length - 1));
+    setProductsCurrentIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : productsTotalSlides - 1));
   };
   const productsGoToNext = () => {
-    setProductsCurrentIndex(prevIndex => (prevIndex < productsSlides.length - 1 ? prevIndex + 1 : 0));
+    const lastIndex = productsTotalSlides - 1;
+    setProductsCurrentIndex(prevIndex => (prevIndex < lastIndex ? prevIndex + 1 : 0));
   };
   const productsGoToSlide = (index) => {
     setProductsCurrentIndex(index);
   };
+  const addProductImage = (src) => {
+    if (!src) return;
+    setProductSlides(prev => {
+      const nextId = prev.length ? Math.max(...prev.map(s => s.id || 0)) + 1 : 1;
+      return [...prev, { id: nextId, image: src }];
+    });
+    setNewProductImageUrl('');
+
+  };
+  const deleteProductSlide = (index) => {
+    setProductSlides(prev => {
+      const updated = prev.filter((_, i) => i !== index);
+      return updated.length ? updated : prev; // prevent empty state
+    });
+    setProductsCurrentIndex(0);
+  };
 
   // State and logic for Ads Slider
-  const [adsCurrentIndex, setAdsCurrentIndex] = useState(0);
+  // const [adsCurrentIndex, setAdsCurrentIndex] = useState(0);
+const adsTotalSlides = adsSlides?.length + (isAdmin ? 1 : 0); 
   const adsGoToPrev = () => {
-    setAdsCurrentIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : adsSlides.length - 1));
+    setAdsCurrentIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : adsTotalSlides - 1));
   };
   const adsGoToNext = () => {
-    setAdsCurrentIndex(prevIndex => (prevIndex < adsSlides.length - 1 ? prevIndex + 1 : 0));
+    const lastIndex = adsTotalSlides - 1;
+    setAdsCurrentIndex(prevIndex => (prevIndex < lastIndex ? prevIndex + 1 : 0));
   };
   const adsGoToSlide = (index) => {
     setAdsCurrentIndex(index);
+  };
+  // const addAdImage = (src) => {
+  //   if (!src) return;
+  //   setAdsSlides(prev => {
+  //     const nextId = prev.length ? Math.max(...prev.map(s => s.id || 0)) + 1 : 1;
+  //     return [
+  //       ...prev,
+  //       {
+  //         id: nextId,
+  //         image: src,
+  //         title: 'New Ad',
+  //         description: 'Your description here',
+  //         buttonText: 'Learn More'
+  //       }
+  //     ];
+  //   });
+  //   setNewAdImageUrl('');
+  // };
+  const deleteAdSlide = (index) => {
+    setAdsSlides(prev => {
+      const updated = prev.filter((_, i) => i !== index);
+      return updated.length ? updated : prev;
+    });
+    setAdsCurrentIndex(0);
   };
 
   // Geolocation function to get user's city
@@ -777,29 +1129,46 @@ const HeroWithSliders = () => {
     }
   };
 
+  const [category, setCategory] = useState('');
+const handleCategoryChange = (e) => {
+  setCategory(e.target.value);
+};
+
+const handleCategorySearch = () => {
+  if (category.trim()) {
+    navigate(`/serviceListing?category=${encodeURIComponent(category)}`);
+  }
+};
+
+const handleCategoryKeyPress = (e) => {
+  if (e.key === 'Enter') {
+    handleCategorySearch();
+  }
+};
+
   // Auto-slide functionality
-  useEffect(() => {
-    getUserLocation();
+  // useEffect(() => {
+  //   getUserLocation();
     
-    // Auto-slide for products slider
-    const productsInterval = setInterval(() => {
-      setProductsCurrentIndex(prevIndex => 
-        prevIndex < productsSlides.length - 1 ? prevIndex + 1 : 0
-      );
-    }, 3000);
+  //   // Auto-slide for products slider
+  //   const productsInterval = setInterval(() => {
+  //     setProductsCurrentIndex(prevIndex => 
+  //       prevIndex < productsTotalSlides - 1 ? prevIndex + 1 : 0
+  //     );
+  //   }, 3000);
 
-    // Auto-slide for ads slider
-    const adsInterval = setInterval(() => {
-      setAdsCurrentIndex(prevIndex => 
-        prevIndex < adsSlides.length - 1 ? prevIndex + 1 : 0
-      );
-    }, 3000);
+  //   // Auto-slide for ads slider
+  //   const adsInterval = setInterval(() => {
+  //     setAdsCurrentIndex(prevIndex => 
+  //       prevIndex < adsTotalSlides - 1 ? prevIndex + 1 : 0
+  //     );
+  //   }, 3000);
 
-    return () => {
-      clearInterval(productsInterval);
-      clearInterval(adsInterval);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(productsInterval);
+  //     clearInterval(adsInterval);
+  //   };
+  // }, [productsTotalSlides, adsTotalSlides]);
 
   // Match right slider height to left container on desktop/laptop
   useEffect(() => {
@@ -832,19 +1201,21 @@ const HeroWithSliders = () => {
         <SearchSection>
           <ContentWrapper>
             <Heading>
-              Search for anything, anywhere in <Highlight>India</Highlight>
+              Search for any Business, any service in <Highlight>India</Highlight>
             </Heading>
             <SearchContainer>
               <LocationInput>
                 <Icon>
                   <FaMapMarkerAlt />
                 </Icon>
-                <StyledInput type="text" placeholder={userLocation} value={userLocation} readOnly />
+                <StyledInput style={{border:"none",   outline:"none"}} type="text"  placeholder={userLocation} value={userLocation}   onChange={handleLocationChange} />
               </LocationInput>
               <InputGroup>
-                <StyledInput type="text" placeholder="Search anything" />
+                <StyledInput type="text" placeholder="Hotels, Shops, Restaurants,"   value={category}
+  onChange={handleCategoryChange}
+  onKeyDown={handleCategoryKeyPress} style={{border:"none",   outline:"none"}}/>
                 <Icon>
-                  <FaMicrophone />
+                  <FaMicrophone onClick={handleCategorySearch} />
                 </Icon>
                 <SearchButton>
                   <FaSearch />
@@ -863,16 +1234,70 @@ const HeroWithSliders = () => {
           <SectionTitle>Products & Services</SectionTitle>
           <SliderWrapper>
             <SliderContent $currentIndex={productsCurrentIndex}>
-              {productsSlides.map(slide => (
+              {productSlides.map((slide, idx) => (
                 <Slide key={slide.id}>
-                  {slide.id === 1 ? (
-                    <img src='https://www.conradpune.com/wp-content/uploads/elementor/thumbs/1-8-pswvh5j9lcihi56uuj9gun5ioocukcetkfh2rb2t1s.png' alt={`Slide ${slide.id}`} />
-                  ) : (
-                    <img src={slide.image} alt={`Slide ${slide.id}`} />
+                  <img src={slide.image} alt={`Slide ${slide.id}`} />
+                  {isAdmin && (
+                  <button
+                    style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: 4, padding: '6px 8px', cursor: 'pointer' }}
+                    onClick={() => deleteProductSlide(slide.id)}
+                  >
+                    Delete
+                  </button>
                   )}
                 </Slide>
               ))}
+
+              {isAdmin && (
+              <Slide key="add-product-slide">
+                 <div style={{
+        height: '200px',
+        overflowY: 'auto' 
+    }}>
+        <h3 style={{ color: '#007bff', marginBottom: '15px' , textAlign:"center"}}>Create New Ad</h3>
+        <form onSubmit={handleNewProdSubmit} className='form-submit' style={{}}>
+            
+          <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Image (File Upload)</label>
+            <input type="file" name="imageFile" onChange={handleNewProdChange} /* ... */ />
+            </div>
+           
+            <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Ad Title*</label>
+            <input type="text" name="title" value={newProdFormData.title} onChange={handleNewProdChange} /* ... */ />
+            
+            </div>
+            {/* Location (City) Input */}
+
+             <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Location (City)*</label>
+            <input type="text" name="city" value={newProdFormData.city} onChange={handleNewProdChange} /* ... */ />
+            </div>
+            {/* Description Input */}
+
+             <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Description</label>
+            <input type="text" name="description" value={newProdFormData.description} onChange={handleNewProdChange} /* ... */ />
+            </div>
+
+                 <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Type</label>
+            <input type="text" name="sliderType" value="Featured" onChange={handleNewProdChange} /* ... */ />
+            </div>
+
+
+            
+            {/* Submit Button */}
+            <button className='btn'  style={{border:"none", justifyContent:"center"}}  type="submit" /* ... */ >
+                Submit Ad
+            </button>
+        </form>
+    </div>
+         
+              </Slide>
+              )}
             </SliderContent>
+
 
             <PrevButton onClick={productsGoToPrev}>
               <FaChevronLeft />
@@ -882,7 +1307,7 @@ const HeroWithSliders = () => {
             </NextButton>
           </SliderWrapper>
           <DotsContainer>
-            {productsSlides.map((_, index) => (
+            {Array.from({ length: productsTotalSlides }).map((_, index) => (
               <Dot
                 key={index}
                 $active={index === productsCurrentIndex}
@@ -894,18 +1319,125 @@ const HeroWithSliders = () => {
       </LeftSideContainer>
       
       {/* Right Side Slider */}
+       {loading ? (
+             // Show a loading placeholder while fetching ads
+             <RightSliderWrapper style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: rightHeight }}>
+                 <p>Loading Advertisements...</p>
+             </RightSliderWrapper>
+        ) : (
       <RightSliderWrapper ref={rightRef} style={{ height: rightHeight }}>
         <AdsSliderContent $currentIndex={adsCurrentIndex}>
-          {adsSlides.map(slide => (
+          {adsSlides.map((slide, idx) => (
             <AdsSlide key={slide.id}>
               <AdsSlideImage src={slide.image} alt={slide.title} />
-              <AdsSlideContent>
+              {isAdmin && (
+              <button
+                  style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: 4, padding: '6px 8px', cursor: 'pointer', zIndex: 2 }}
+                  onClick={() => deleteAdSlide(idx)}
+                >
+                  Delete
+                </button>
+
+                )}
+              {/* {isAdmin && (
+              )} */}
+
+
+              
+              {/* <AdsSlideContent>
                 <AdsSlideTitle>{slide.title}</AdsSlideTitle>
                 <AdsSlideDescription>{slide.description}</AdsSlideDescription>
                 <AdsSlideButton>{slide.buttonText}</AdsSlideButton>
-              </AdsSlideContent>
-            </AdsSlide>
+              </AdsSlideContent> */}
+            </AdsSlide> 
           ))}
+          {/* <AdsSlide key="add-ad-slide">
+            <div style={{
+              width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12,
+              border: '2px dashed #99cfff', background: '#f7fbff'
+            }}>
+              <div style={{ fontWeight: 600, color: '#007bff' }}>Add ad image</div>
+              <input
+                type="text"
+                placeholder="Paste image URL"
+                value={newAdImageUrl}
+                onChange={(e) => setNewAdImageUrl(e.target.value)}
+                style={{ width: '80%', padding: 8, borderRadius: 6, border: '1px solid #cfe3ff' }}
+              />
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  onClick={() => addAdImage(newAdImageUrl)}
+                  style={{ background: '#007bff', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: 6, cursor: 'pointer' }}
+                >
+                  Add
+                </button>
+                <label style={{ background: '#e9f3ff', color: '#007bff', border: '1px solid #b9d6ff', padding: '8px 12px', borderRadius: 6, cursor: 'pointer' }}>
+                  Upload
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const file = e.target.files && e.target.files[0];
+                      if (file) {
+                        const url = URL.createObjectURL(file);
+                        addAdImage(url);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+          </AdsSlide> */}
+
+{/* MODIFIED: NEW ADVERTISEMENT FORM SLIDE */}
+
+{isAdmin &&(
+<AdsSlide key="add-ad-form" style={{padding:10}}>
+    <div style={{
+        /* Styling for the form container */
+        overflowY: 'auto' 
+    }}>
+        <h3 style={{ color: '#007bff', marginBottom: '15px' , textAlign:"center"}}>Create New Ad</h3>
+        <form onSubmit={handleNewAdSubmit} className='form-submit' style={{}}>
+            
+          <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Image (File Upload)</label>
+            <input type="file" name="imageFile" onChange={handleNewAdChange} /* ... */ />
+            </div>
+           
+            <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Ad Title*</label>
+            <input type="text" name="title" value={newAdFormData.title} onChange={handleNewAdChange} /* ... */ />
+            
+            </div>
+            {/* Location (City) Input */}
+
+             <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Location (City)*</label>
+            <input type="text" name="city" value={newAdFormData.city} onChange={handleNewAdChange} /* ... */ />
+            </div>
+            {/* Description Input */}
+
+             <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Description</label>
+            <input type="text" name="description" value={newAdFormData.description} onChange={handleNewAdChange} /* ... */ />
+            </div>
+
+            {/* Button Text Input */}
+             <div className='form-group'>
+            <label style={{ fontWeight: 600 }}>Button Text</label>
+            <input type="text" name="buttonText" value={newAdFormData.buttonText} onChange={handleNewAdChange} /* ... */ />
+            </div>
+            
+            {/* Submit Button */}
+            <button className='btn'  style={{border:"none", justifyContent:"center"}}    type="submit" /* ... */ >
+                Submit Ad
+            </button>
+        </form>
+    </div>
+</AdsSlide>
+)}
         </AdsSliderContent>
 
         <AdsPrevButton onClick={adsGoToPrev}>
@@ -916,7 +1448,7 @@ const HeroWithSliders = () => {
         </AdsNextButton>
         
         <AdsDotsContainer>
-          {adsSlides.map((_, index) => (
+          {Array.from({ length: adsTotalSlides }).map((_, index) => (
             <AdsDot
               key={index}
               $active={index === adsCurrentIndex}
@@ -925,6 +1457,7 @@ const HeroWithSliders = () => {
           ))}
         </AdsDotsContainer>
       </RightSliderWrapper>
+        )}
     </MainContainer>
   );
 };

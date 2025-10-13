@@ -73,8 +73,8 @@ const QuickBooking1 = () => {
     return (
         <div className='booking-parent1'>
         <div className="booking-container">
-            <h1 className="main-title">Quick Booking</h1>
-            <p className="subtitle">Book local services instantly with MTS – Quick Booking, hassle-free.</p>
+            <h1 className="main-title">Free Booking</h1>
+            <p className="subtitle">Book local services instantly with MTS – Free Booking, hassle-free.</p>
             <div className="content-wrapper">
                 <div className="illustration-section">
                     <Illustration/>
@@ -82,7 +82,7 @@ const QuickBooking1 = () => {
                 </div>
                 <div className='divider'></div>
                 <div className="form-section">
-                    <h2 className="form-title">Quick Booking</h2>
+                    <h2 className="form-title">Free Booking</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="name">Name*</label>
