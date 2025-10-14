@@ -132,7 +132,7 @@ const Header = () => {
       >
         <Menu mode="vertical" defaultSelectedKeys={['home']}>
           {renderMenuItem('home', 'Home', '/')}
-          {renderMenuItem('quick-booking', 'Free Booking', '/quick-booking')}
+          {renderMenuItem('quick-booking', 'Free Booking', '/quickBooking')}
           {renderMenuItem('advertise', 'Advertise', '/advertise')}
 
           <Menu.Item key="language-mobile">
