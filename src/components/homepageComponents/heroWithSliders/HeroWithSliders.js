@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { FaMapMarkerAlt, FaMicrophone, FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { getAdvertisements, deleteAdvertisement, createAdvertisement } from '../../../apis/Advertisements';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 // --- Main Container for the entire component ---
 const MainContainer = styled.div`
@@ -337,7 +340,7 @@ const AdsSlideImage = styled.img`
   width: 100%;
   flex: 1 1 auto;
   min-height: 0;
-  object-fit: cover;
+  object-fit: fill;
 `;
 
 const AdsSlideContent = styled.div`
@@ -793,7 +796,7 @@ const handleNewAdSubmit = async (e) => { // ⬅️ Must be async
     // 1. Basic Validation
     // Check for imageFile OR imageUrl, not just imageFile
     if (!newAdFormData.title || !newAdFormData.city || (!newAdFormData.imageFile && !newAdFormData.imageUrl)) {
-        alert('Please fill in at least Title, Location (City), and provide an Image file or URL.');
+        toast.error('Please fill in at least Title, Location (City), and provide an Image file or URL.');
         return;
     }
 
@@ -831,14 +834,14 @@ const handleNewAdSubmit = async (e) => { // ⬅️ Must be async
         setAdsCurrentIndex(adsSlides.length); 
 
         console.log('✅ Advertisement created:', newAdFromApi);
-        alert(`Ad for "${newAdFromApi.title}" successfully created!`);
+      toast.success(`Ad for "${newAdFromApi.title}" successfully created!`);
 
     } catch (error) {
         
         // 5. Error Handling
         const errorMessage = error.response?.data?.message || 'Failed to create advertisement. Check API service.';
         console.error('❌ Error creating advertisement:', error.response || error);
-        alert(errorMessage);
+        toast.error(errorMessage);
 
     } finally {
         setLoading(false);
@@ -852,7 +855,7 @@ const handleNewProdSubmit = async (e) => { // ⬅️ Must be async
     // 1. Basic Validation
     // Check for imageFile OR imageUrl, not just imageFile
     if (!newProdFormData.title || !newProdFormData.city || (!newProdFormData.imageFile && !newProdFormData.imageUrl)) {
-        alert('Please fill in at least Title, Location (City), and provide an Image file or URL.');
+        toast.error('Please fill in at least Title, Location (City), and provide an Image file or URL.');
         return;
     }
 
@@ -890,14 +893,14 @@ const handleNewProdSubmit = async (e) => { // ⬅️ Must be async
         setProductsCurrentIndex(productSlides.length); 
 
         console.log('✅ Advertisement created:', newProdFromApi);
-        alert(`Ad for "${newProdFromApi.title}" successfully created!`);
+        toast.success(`Ad for "${newProdFromApi.title}" successfully created!`);
 
     } catch (error) {
         
         // 5. Error Handling
         const errorMessage = error.response?.data?.message || 'Failed to create advertisement. Check API service.';
         console.error('❌ Error creating advertisement:', error.response || error);
-        alert(errorMessage);
+        toast.error(errorMessage);
 
     } finally {
         setLoading(false);
@@ -960,7 +963,7 @@ const fetchData = async (userLocation) => {
       setAdsSlides(prev => prev.filter(ad => ad.advertisement_id !== advertisement_id));
     } catch (err) {
       console.error('Failed to delete ad:', err);
-      alert('Failed to delete advertisement');
+      toast.error('Failed to delete advertisement');
     }
   };
 
@@ -1196,6 +1199,7 @@ const handleCategoryKeyPress = (e) => {
   return (
     <MainContainer>
       {/* Left Side Container */}
+      <ToastContainer position="top-right" autoClose={3000} />
       <LeftSideContainer ref={leftRef}>
         {/* Search Section */}
         <SearchSection>

@@ -3,6 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import "./ServiceListing.css";
 import axios from "axios";
 import { Base_url } from "../../constants/constant";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 const initialServices = [
   // Auto Care Services
@@ -311,7 +314,8 @@ const [sort, setSort] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [servicesListing, setServicesList]= useState([]);
   const [error, setError]= useState('')
-  const [isAdmin, setIsAdmin]= useState(false)
+  const [isAdmin, setIsAdmin]= useState(false);
+
   useEffect(() => {
         const checkAdminStatus = () => {
             // 1. Retrieve the role string from Local Storage
@@ -379,7 +383,7 @@ const [sort, setSort] = useState("");
 
     // Basic validation
     if (!formData.businessName || !formData.mobileNumber || !formData.address) {
-      alert('Please fill all required fields.');
+      toast.error('Please fill all required fields.');
       return;
     }
 
@@ -399,11 +403,11 @@ const data = new FormData();
       });
 
       console.log('✅ Service created:', response.data);
-      alert('Service created successfully!');
+      toast.success('Service created successfully!');
       handleCancel();
     } catch (error) {
       console.error('❌ Error:', error);
-      alert(error.response?.data?.message || 'Error creating Service');
+      toast.error(error.response?.data?.message || 'Error creating Service');
     } finally {
       setLoading(false);
     }
@@ -499,6 +503,7 @@ const handleCategoryChange = (e) => {
 
   return (
     <div className="servicespage-container">
+       <ToastContainer position="top-right" autoClose={3000} />
       <h2 className="servicespage-title">
         {selectedCategory ? `Best ${selectedCategory} Services in Andhra Pradesh` : 'Most Trusted Services in Andhra Pradesh'}
       </h2>
@@ -629,7 +634,8 @@ const handleCategoryChange = (e) => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Add New Service</h3>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="form-section">
+              <div className="form-group">
               <input
                 type="text"
                 name="businessName"
@@ -638,14 +644,16 @@ const handleCategoryChange = (e) => {
                 placeholder="Business Name*"
                 required
               />
-              <input
+              </div>
+              <div className='form-group'>  <input
                 type="text"
                 name="businessOwnerName"
                 value={formData.businessOwnerName}
                 onChange={handleChange}
                 placeholder="Business Owner Name"
               />
-              <input
+              </div>
+              <div className='form-group'>  <input
                 type="text"
                 name="mobileNumber"
                 value={formData.mobileNumber}
@@ -653,13 +661,16 @@ const handleCategoryChange = (e) => {
                 placeholder="Mobile Number*"
                 required
               />
-              <input
+              </div>
+              <div className='form-group'>  <input
                 type="text"
                 name="whatsappNumber"
                 value={formData.whatsappNumber}
                 onChange={handleChange}
                 placeholder="WhatsApp Number"
               />
+              </div>
+              <div className='form-group'> 
               <select
                 name="category"
                 value={formData.category}
@@ -676,6 +687,8 @@ const handleCategoryChange = (e) => {
                 <option value="Plumber">Plumber</option>
                 <option value="Training">Training</option>
               </select>
+              </div>
+              <div className='form-group'> 
               <input
                 type="text"
                 name="address"
@@ -684,7 +697,11 @@ const handleCategoryChange = (e) => {
                 placeholder="Address*"
                 required
               />
+              </div>
+              <div className='form-group'> 
               <input type="file" accept="image/*" onChange={handleFileChange} />
+              </div>
+           
 
               <div className="modal-buttons">
                 <button type="button" onClick={handleCancel}>

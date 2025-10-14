@@ -3,6 +3,9 @@ import axios from 'axios';
 import './Advertise.css';
 import quickbook from "../../../assets/register/5354443_2760424 1 (1).png";
 import { Base_url } from '../../../constants/constant';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 const Illustration = () => (
   <div className="illustration-wrapper">
@@ -74,7 +77,7 @@ const Advertise = () => {
       });
 
       console.log('✅ Advertisement created:', response.data);
-      alert('Advertisement created successfully!');
+      toast.success('Advertisement created successfully!');
       handleCancel();
     } catch (error) {
       console.error('❌ Error:', error);
@@ -86,6 +89,7 @@ const Advertise = () => {
 
   return (
     <div className='booking-parent1'>
+         <ToastContainer position="top-right" autoClose={3000} />
       <div className="booking-container">
         <h1 className="main-title">Advertise With Us</h1>
         <p className="subtitle">Promote your brand — get featured on My Town Service!</p>
