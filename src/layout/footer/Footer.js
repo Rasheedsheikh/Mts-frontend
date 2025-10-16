@@ -58,7 +58,7 @@ const Footer = () => {
             </div>
             <div className="contact-item">
               <FaPhoneAlt className="contact-icon" />
-              <span>724024099</span>
+              <span>7240240999</span>
             </div>
             <div className="contact-item">
               <FaEnvelope className="contact-icon" />

@@ -26,6 +26,11 @@ import QuickBooking1 from './components/registrations/quickBooking/QuickBooking1
 import QuickBooking2 from './components/registrations/quickBooking/QuickBooking2';
 import Advertise from './components/registrations/advertise/Advertise';
 import DigitalPlatform from './components/registrations/digitalPlatform/DigitalPlatform';
+import PartnerRegistration from './components/registrations/partner/PartnerRegistration';
+import PartnerRegistration1 from './components/registrations/partner/PartnerRegistration';
+import PartnerRegistration2 from './components/registrations/partner/PartnerRegistration2';
+import PartnerSuccess from './components/registrations/partner/PartnerSuccess';
+import AdminDashboard from './components/admin/AdminDashboard';
 // import PaymentGateway2 from './components/registrations/payments/paymentGateway2';
 
 
@@ -77,6 +82,11 @@ function AppContent() {
             <Route path='/updatePassword' element={<UpdatePassword/>}/>
              <Route path='/merchantRegistration' element={<MerchantRegistration/>}/>
              <Route path='/merchantRegistration2' element={<MerchantRegistration2/>}/>
+              <Route path='/partnerRegister' element={<PartnerRegistration/>}/>
+               <Route path='/partnerRegister2' element={<PartnerRegistration2/>}/>
+               <Route path="/partnerSuccess" element={<PartnerSuccess />} />
+               <Route path="/admin" element={<AdminDashboard />} />
+
                <Route path='/payment' element={<PaymentGateway/>}/>
                    <Route path='/vendorStep1' element={<Vendorstep1/>}/>
                    <Route path='/digitalMarketing' element={<DigitalPlatform/>}/>

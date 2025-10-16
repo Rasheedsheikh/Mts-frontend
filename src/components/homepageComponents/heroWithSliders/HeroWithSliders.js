@@ -341,6 +341,8 @@ const AdsSlideImage = styled.img`
   flex: 1 1 auto;
   min-height: 0;
   object-fit: fill;
+
+  
 `;
 
 const AdsSlideContent = styled.div`
@@ -748,41 +750,41 @@ const HeroWithSliders = () => {
     }, []); 
 
   // NEW STATE FOR THE ADD AD FORM
-    const [newAdFormData, setNewAdFormData] = useState({
-        title: '',
-        city: '',
-        imageFile: null, 
-        sliderType:''
-    });
+    // const [newAdFormData, setNewAdFormData] = useState({
+    //     title: '',
+    //     city: '',
+    //     imageFile: null, 
+    //     sliderType:''
+    // });
 
-       const [newProdFormData, setNewProdFormData] = useState({
-        title: '',
-        city: '',
-        imageFile: null, 
-        sliderType:''
-    });
+    //    const [newProdFormData, setNewProdFormData] = useState({
+    //     title: '',
+    //     city: '',
+    //     imageFile: null, 
+    //     sliderType:''
+    // });
 
-    const handleNewAdChange = (e) => {
-        const { name, value, files } = e.target;
+    // const handleNewAdChange = (e) => {
+    //     const { name, value, files } = e.target;
 
-        if (name === 'imageFile') {
-            // Clear URL if a file is chosen, and vice-versa (not shown here, but good practice)
-            setNewAdFormData({ ...newAdFormData, imageFile: files[0]}); 
-        } else {
-            setNewAdFormData({ ...newAdFormData, [name]: value });
-        }
-    };
+    //     if (name === 'imageFile') {
+    //         // Clear URL if a file is chosen, and vice-versa (not shown here, but good practice)
+    //         setNewAdFormData({ ...newAdFormData, imageFile: files[0]}); 
+    //     } else {
+    //         setNewAdFormData({ ...newAdFormData, [name]: value });
+    //     }
+    // };
 
-        const handleNewProdChange = (e) => {
-        const { name, value, files } = e.target;
+    //     const handleNewProdChange = (e) => {
+    //     const { name, value, files } = e.target;
 
-        if (name === 'imageFile') {
-            // Clear URL if a file is chosen, and vice-versa (not shown here, but good practice)
-            setNewProdFormData({ ...newProdFormData, imageFile: files[0]}); 
-        } else {
-            setNewProdFormData({ ...newProdFormData, [name]: value });
-        }
-    };
+    //     if (name === 'imageFile') {
+    //         // Clear URL if a file is chosen, and vice-versa (not shown here, but good practice)
+    //         setNewProdFormData({ ...newProdFormData, imageFile: files[0]}); 
+    //     } else {
+    //         setNewProdFormData({ ...newProdFormData, [name]: value });
+    //     }
+    // };
 // HeroWithSliders.jsx
 
 
@@ -790,122 +792,122 @@ const HeroWithSliders = () => {
 
 // 2. Ensure your component has the necessary state (newAdFormData, loading, adsSlides)
 
-const handleNewAdSubmit = async (e) => { // ⬅️ Must be async
-    e.preventDefault();
+// const handleNewAdSubmit = async (e) => { // ⬅️ Must be async
+//     e.preventDefault();
 
-    // 1. Basic Validation
-    // Check for imageFile OR imageUrl, not just imageFile
-    if (!newAdFormData.title || !newAdFormData.city || (!newAdFormData.imageFile && !newAdFormData.imageUrl)) {
-        toast.error('Please fill in at least Title, Location (City), and provide an Image file or URL.');
-        return;
-    }
+//     // 1. Basic Validation
+//     // Check for imageFile OR imageUrl, not just imageFile
+//     if (!newAdFormData.title || !newAdFormData.city || (!newAdFormData.imageFile && !newAdFormData.imageUrl)) {
+//         toast.error('Please fill in at least Title, Location (City), and provide an Image file or URL.');
+//         return;
+//     }
 
-    // 2. Prepare Data (using FormData for API POST)
-    const data = new FormData();
-    data.append('title', newAdFormData.title);
-    data.append('description', newAdFormData.description || '');
-    // NOTE: If your API expects 'location' instead of 'city', change the key below.
-    data.append('location', newAdFormData.city); 
-    data.append('sliderType',newAdFormData.sliderType)
+//     // 2. Prepare Data (using FormData for API POST)
+//     const data = new FormData();
+//     data.append('title', newAdFormData.title);
+//     data.append('description', newAdFormData.description || '');
+//     // NOTE: If your API expects 'location' instead of 'city', change the key below.
+//     data.append('location', newAdFormData.city); 
+//     data.append('sliderType',newAdFormData.sliderType)
     
-    // Append the file or the URL
-    if (newAdFormData.imageFile) {
-        // Use the key your backend expects for file upload (e.g., 'file' or 'image')
-        data.append('image', newAdFormData.imageFile); 
-    } else if (newAdFormData.imageUrl) {
-        data.append('image', newAdFormData.imageUrl);
-    }
+//     // Append the file or the URL
+//     if (newAdFormData.imageFile) {
+//         // Use the key your backend expects for file upload (e.g., 'file' or 'image')
+//         data.append('image', newAdFormData.imageFile); 
+//     } else if (newAdFormData.imageUrl) {
+//         data.append('image', newAdFormData.imageUrl);
+//     }
 
-    setLoading(true); // Assuming you have a loading state set up
+//     setLoading(true); // Assuming you have a loading state set up
 
-    // 3. API Call to post data ⬅️ API Integration
-    try {
-        const newAdFromApi = await createAdvertisement(data); 
+//     // 3. API Call to post data ⬅️ API Integration
+//     try {
+//         const newAdFromApi = await createAdvertisement(data); 
 
-        // 4. Success Actions: Update UI with the NEW AD data from the API response
-        setAdsSlides(prev => [...prev, newAdFromApi]);
+//         // 4. Success Actions: Update UI with the NEW AD data from the API response
+//         setAdsSlides(prev => [...prev, newAdFromApi]);
         
-        // Reset form data
-        setNewAdFormData({
-            title: '', description: '', city: '', buttonText: '', imageFile: null, sliderType:'',
-        });
+//         // Reset form data
+//         setNewAdFormData({
+//             title: '', description: '', city: '', buttonText: '', imageFile: null, sliderType:'',
+//         });
         
-        // Move slider to the new ad (adsSlides.length is the index of the newly added slide)
-        setAdsCurrentIndex(adsSlides.length); 
+//         // Move slider to the new ad (adsSlides.length is the index of the newly added slide)
+//         setAdsCurrentIndex(adsSlides.length); 
 
-        console.log('✅ Advertisement created:', newAdFromApi);
-      toast.success(`Ad for "${newAdFromApi.title}" successfully created!`);
+//         console.log('✅ Advertisement created:', newAdFromApi);
+//       toast.success(`Ad for "${newAdFromApi.title}" successfully created!`);
 
-    } catch (error) {
+//     } catch (error) {
         
-        // 5. Error Handling
-        const errorMessage = error.response?.data?.message || 'Failed to create advertisement. Check API service.';
-        console.error('❌ Error creating advertisement:', error.response || error);
-        toast.error(errorMessage);
+//         // 5. Error Handling
+//         const errorMessage = error.response?.data?.message || 'Failed to create advertisement. Check API service.';
+//         console.error('❌ Error creating advertisement:', error.response || error);
+//         toast.error(errorMessage);
 
-    } finally {
-        setLoading(false);
-    }
-};
+//     } finally {
+//         setLoading(false);
+//     }
+// };
 
 
-const handleNewProdSubmit = async (e) => { // ⬅️ Must be async
-    e.preventDefault();
+// const handleNewProdSubmit = async (e) => { // ⬅️ Must be async
+//     e.preventDefault();
 
-    // 1. Basic Validation
-    // Check for imageFile OR imageUrl, not just imageFile
-    if (!newProdFormData.title || !newProdFormData.city || (!newProdFormData.imageFile && !newProdFormData.imageUrl)) {
-        toast.error('Please fill in at least Title, Location (City), and provide an Image file or URL.');
-        return;
-    }
+//     // 1. Basic Validation
+//     // Check for imageFile OR imageUrl, not just imageFile
+//     if (!newProdFormData.title || !newProdFormData.city || (!newProdFormData.imageFile && !newProdFormData.imageUrl)) {
+//         toast.error('Please fill in at least Title, Location (City), and provide an Image file or URL.');
+//         return;
+//     }
 
-    // 2. Prepare Data (using FormData for API POST)
-    const data = new FormData();
-    data.append('title', newProdFormData.title);
-    data.append('description', newProdFormData.description || '');
-    // NOTE: If your API expects 'location' instead of 'city', change the key below.
-    data.append('location', newProdFormData.city); 
-    data.append('sliderType', 'Featured')
+//     // 2. Prepare Data (using FormData for API POST)
+//     const data = new FormData();
+//     data.append('title', newProdFormData.title);
+//     data.append('description', newProdFormData.description || '');
+//     // NOTE: If your API expects 'location' instead of 'city', change the key below.
+//     data.append('location', newProdFormData.city); 
+//     data.append('sliderType', 'Featured')
     
-    // Append the file or the URL
-    if (newProdFormData.imageFile) {
-        // Use the key your backend expects for file upload (e.g., 'file' or 'image')
-        data.append('image', newProdFormData.imageFile); 
-    } else if (newProdFormData.imageUrl) {
-        data.append('image', newProdFormData.imageUrl);
-    }
+//     // Append the file or the URL
+//     if (newProdFormData.imageFile) {
+//         // Use the key your backend expects for file upload (e.g., 'file' or 'image')
+//         data.append('image', newProdFormData.imageFile); 
+//     } else if (newProdFormData.imageUrl) {
+//         data.append('image', newProdFormData.imageUrl);
+//     }
 
-    setLoading(true); // Assuming you have a loading state set up
+//     setLoading(true); // Assuming you have a loading state set up
 
-    // 3. API Call to post data ⬅️ API Integration
-    try {
-        const newProdFromApi = await createAdvertisement(data); 
+//     // 3. API Call to post data ⬅️ API Integration
+//     try {
+//         const newProdFromApi = await createAdvertisement(data); 
 
-        // 4. Success Actions: Update UI with the NEW AD data from the API response
-        setProductSlides(prev => [...prev, newProdFromApi]);
+//         // 4. Success Actions: Update UI with the NEW AD data from the API response
+//         setProductSlides(prev => [...prev, newProdFromApi]);
         
-        // Reset form data
-        setNewProdFormData({
-            title: '', description: '', city: '', buttonText: '', imageFile: null, sliderType:'',
-        });
+//         // Reset form data
+//         setNewProdFormData({
+//             title: '', description: '', city: '', buttonText: '', imageFile: null, sliderType:'',
+//         });
         
-        // Move slider to the new ad (adsSlides.length is the index of the newly added slide)
-        setProductsCurrentIndex(productSlides.length); 
+//         // Move slider to the new ad (adsSlides.length is the index of the newly added slide)
+//         setProductsCurrentIndex(productSlides.length); 
 
-        console.log('✅ Advertisement created:', newProdFromApi);
-        toast.success(`Ad for "${newProdFromApi.title}" successfully created!`);
+//         console.log('✅ Advertisement created:', newProdFromApi);
+//         toast.success(`Ad for "${newProdFromApi.title}" successfully created!`);
 
-    } catch (error) {
+//     } catch (error) {
         
-        // 5. Error Handling
-        const errorMessage = error.response?.data?.message || 'Failed to create advertisement. Check API service.';
-        console.error('❌ Error creating advertisement:', error.response || error);
-        toast.error(errorMessage);
+//         // 5. Error Handling
+//         const errorMessage = error.response?.data?.message || 'Failed to create advertisement. Check API service.';
+//         console.error('❌ Error creating advertisement:', error.response || error);
+//         toast.error(errorMessage);
 
-    } finally {
-        setLoading(false);
-    }
-};
+//     } finally {
+//         setLoading(false);
+//     }
+// };
   
 
 const fetchData = async (userLocation) => {
@@ -957,15 +959,15 @@ const fetchData = async (userLocation) => {
         setLoading(false);
     }
 };
-  const handleDeleteAd = async (advertisement_id) => {
-    try {
-      await deleteAdvertisement(advertisement_id);
-      setAdsSlides(prev => prev.filter(ad => ad.advertisement_id !== advertisement_id));
-    } catch (err) {
-      console.error('Failed to delete ad:', err);
-      toast.error('Failed to delete advertisement');
-    }
-  };
+  // const handleDeleteAd = async (advertisement_id) => {
+  //   try {
+  //     await deleteAdvertisement(advertisement_id);
+  //     setAdsSlides(prev => prev.filter(ad => ad.advertisement_id !== advertisement_id));
+  //   } catch (err) {
+  //     console.error('Failed to delete ad:', err);
+  //     toast.error('Failed to delete advertisement');
+  //   }
+  // };
 
   // Get Location + Fetch Ads
   useEffect(() => {
@@ -1026,17 +1028,20 @@ const fetchData = async (userLocation) => {
   const [newAdImageUrl, setNewAdImageUrl] = useState('');
   
   // State and logic for Products & Services Slider
-const productsTotalSlides = productSlides?.length + (isAdmin ? 1 : 0); 
-  // const productsTotalSlides = (productSlides?.length || 0) + 1; // includes add slide
+  const productsTotalSlides = productSlides?.length || 0;
   const productsGoToPrev = () => {
+    if (productsTotalSlides <= 1) return;
     setProductsCurrentIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : productsTotalSlides - 1));
   };
   const productsGoToNext = () => {
+    if (productsTotalSlides <= 1) return;
     const lastIndex = productsTotalSlides - 1;
     setProductsCurrentIndex(prevIndex => (prevIndex < lastIndex ? prevIndex + 1 : 0));
   };
   const productsGoToSlide = (index) => {
-    setProductsCurrentIndex(index);
+    if (index >= 0 && index < productsTotalSlides) {
+      setProductsCurrentIndex(index);
+    }
   };
   const addProductImage = (src) => {
     if (!src) return;
@@ -1056,17 +1061,20 @@ const productsTotalSlides = productSlides?.length + (isAdmin ? 1 : 0);
   };
 
   // State and logic for Ads Slider
-  // const [adsCurrentIndex, setAdsCurrentIndex] = useState(0);
-const adsTotalSlides = adsSlides?.length + (isAdmin ? 1 : 0); 
+  const adsTotalSlides = adsSlides?.length || 0;
   const adsGoToPrev = () => {
+    if (adsTotalSlides <= 1) return;
     setAdsCurrentIndex(prevIndex => (prevIndex > 0 ? prevIndex - 1 : adsTotalSlides - 1));
   };
   const adsGoToNext = () => {
+    if (adsTotalSlides <= 1) return;
     const lastIndex = adsTotalSlides - 1;
     setAdsCurrentIndex(prevIndex => (prevIndex < lastIndex ? prevIndex + 1 : 0));
   };
   const adsGoToSlide = (index) => {
-    setAdsCurrentIndex(index);
+    if (index >= 0 && index < adsTotalSlides) {
+      setAdsCurrentIndex(index);
+    }
   };
   // const addAdImage = (src) => {
   //   if (!src) return;
@@ -1150,28 +1158,41 @@ const handleCategoryKeyPress = (e) => {
 };
 
   // Auto-slide functionality
-  // useEffect(() => {
-  //   getUserLocation();
+  useEffect(() => {
+    getUserLocation();
     
-  //   // Auto-slide for products slider
-  //   const productsInterval = setInterval(() => {
-  //     setProductsCurrentIndex(prevIndex => 
-  //       prevIndex < productsTotalSlides - 1 ? prevIndex + 1 : 0
-  //     );
-  //   }, 3000);
+    // Auto-slide for products slider
+    const productsInterval = productsTotalSlides > 1 ? setInterval(() => {
+      setProductsCurrentIndex(prevIndex => 
+        prevIndex < productsTotalSlides - 1 ? prevIndex + 1 : 0
+      );
+    }, 3000) : null;
 
-  //   // Auto-slide for ads slider
-  //   const adsInterval = setInterval(() => {
-  //     setAdsCurrentIndex(prevIndex => 
-  //       prevIndex < adsTotalSlides - 1 ? prevIndex + 1 : 0
-  //     );
-  //   }, 3000);
+    // Auto-slide for ads slider
+    const adsInterval = adsTotalSlides > 1 ? setInterval(() => {
+      setAdsCurrentIndex(prevIndex => 
+        prevIndex < adsTotalSlides - 1 ? prevIndex + 1 : 0
+      );
+    }, 3000) : null;
 
-  //   return () => {
-  //     clearInterval(productsInterval);
-  //     clearInterval(adsInterval);
-  //   };
-  // }, [productsTotalSlides, adsTotalSlides]);
+    return () => {
+      if (productsInterval) clearInterval(productsInterval);
+      if (adsInterval) clearInterval(adsInterval);
+    };
+  }, [productsTotalSlides, adsTotalSlides]);
+
+  // Reset current index when slides change to prevent index out of bounds
+  useEffect(() => {
+    if (productsCurrentIndex >= productsTotalSlides && productsTotalSlides > 0) {
+      setProductsCurrentIndex(0);
+    }
+  }, [productsTotalSlides, productsCurrentIndex]);
+
+  useEffect(() => {
+    if (adsCurrentIndex >= adsTotalSlides && adsTotalSlides > 0) {
+      setAdsCurrentIndex(0);
+    }
+  }, [adsTotalSlides, adsCurrentIndex]);
 
   // Match right slider height to left container on desktop/laptop
   useEffect(() => {
@@ -1241,18 +1262,18 @@ const handleCategoryKeyPress = (e) => {
               {productSlides.map((slide, idx) => (
                 <Slide key={slide.id}>
                   <img src={slide.image} alt={`Slide ${slide.id}`} />
-                  {isAdmin && (
+                  {/* {isAdmin && (
                   <button
                     style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: 4, padding: '6px 8px', cursor: 'pointer' }}
                     onClick={() => deleteProductSlide(slide.id)}
                   >
                     Delete
                   </button>
-                  )}
+                  )} */}
                 </Slide>
               ))}
 
-              {isAdmin && (
+              {/* {isAdmin && (
               <Slide key="add-product-slide">
                  <div style={{
         height: '200px',
@@ -1263,62 +1284,68 @@ const handleCategoryKeyPress = (e) => {
             
           <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Image (File Upload)</label>
-            <input type="file" name="imageFile" onChange={handleNewProdChange} /* ... */ />
+            <input type="file" name="imageFile" onChange={handleNewProdChange}  />
             </div>
            
             <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Ad Title*</label>
-            <input type="text" name="title" value={newProdFormData.title} onChange={handleNewProdChange} /* ... */ />
+            <input type="text" name="title" value={newProdFormData.title} onChange={handleNewProdChange}  />
             
             </div>
-            {/* Location (City) Input */}
+        
 
              <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Location (City)*</label>
-            <input type="text" name="city" value={newProdFormData.city} onChange={handleNewProdChange} /* ... */ />
+            <input type="text" name="city" value={newProdFormData.city} onChange={handleNewProdChange}  />
             </div>
-            {/* Description Input */}
+        
 
              <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Description</label>
-            <input type="text" name="description" value={newProdFormData.description} onChange={handleNewProdChange} /* ... */ />
+            <input type="text" name="description" value={newProdFormData.description} onChange={handleNewProdChange}  />
             </div>
 
                  <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Type</label>
-            <input type="text" name="sliderType" value="Featured" onChange={handleNewProdChange} /* ... */ />
+            <input type="text" name="sliderType" value="Featured" onChange={handleNewProdChange}  />
             </div>
 
 
             
-            {/* Submit Button */}
-            <button className='btn'  style={{border:"none", justifyContent:"center"}}  type="submit" /* ... */ >
+      
+            <button className='btn'  style={{border:"none", justifyContent:"center"}}  type="submit"  >
                 Submit Ad
             </button>
         </form>
     </div>
          
               </Slide>
-              )}
+              )} */}
             </SliderContent>
 
 
-            <PrevButton onClick={productsGoToPrev}>
-              <FaChevronLeft />
-            </PrevButton>
-            <NextButton onClick={productsGoToNext}>
-              <FaChevronRight />
-            </NextButton>
+            {productsTotalSlides > 1 && (
+              <>
+                <PrevButton onClick={productsGoToPrev}>
+                  <FaChevronLeft />
+                </PrevButton>
+                <NextButton onClick={productsGoToNext}>
+                  <FaChevronRight />
+                </NextButton>
+              </>
+            )}
           </SliderWrapper>
-          <DotsContainer>
-            {Array.from({ length: productsTotalSlides }).map((_, index) => (
-              <Dot
-                key={index}
-                $active={index === productsCurrentIndex}
-                onClick={() => productsGoToSlide(index)}
-              />
-            ))}
-          </DotsContainer>
+          {productsTotalSlides > 1 && (
+            <DotsContainer>
+              {Array.from({ length: productsTotalSlides }).map((_, index) => (
+                <Dot
+                  key={index}
+                  $active={index === productsCurrentIndex}
+                  onClick={() => productsGoToSlide(index)}
+                />
+              ))}
+            </DotsContainer>
+          )}
         </ProductsServicesWrapper>
       </LeftSideContainer>
       
@@ -1334,7 +1361,7 @@ const handleCategoryKeyPress = (e) => {
           {adsSlides.map((slide, idx) => (
             <AdsSlide key={slide.id}>
               <AdsSlideImage src={slide.image} alt={slide.title} />
-              {isAdmin && (
+              {/* {isAdmin && (
               <button
                   style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: 4, padding: '6px 8px', cursor: 'pointer', zIndex: 2 }}
                   onClick={() => deleteAdSlide(idx)}
@@ -1342,9 +1369,8 @@ const handleCategoryKeyPress = (e) => {
                   Delete
                 </button>
 
-                )}
-              {/* {isAdmin && (
-              )} */}
+                )} */}
+            
 
 
               
@@ -1355,51 +1381,11 @@ const handleCategoryKeyPress = (e) => {
               </AdsSlideContent> */}
             </AdsSlide> 
           ))}
-          {/* <AdsSlide key="add-ad-slide">
-            <div style={{
-              width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12,
-              border: '2px dashed #99cfff', background: '#f7fbff'
-            }}>
-              <div style={{ fontWeight: 600, color: '#007bff' }}>Add ad image</div>
-              <input
-                type="text"
-                placeholder="Paste image URL"
-                value={newAdImageUrl}
-                onChange={(e) => setNewAdImageUrl(e.target.value)}
-                style={{ width: '80%', padding: 8, borderRadius: 6, border: '1px solid #cfe3ff' }}
-              />
-              <div style={{ display: 'flex', gap: 10 }}>
-                <button
-                  onClick={() => addAdImage(newAdImageUrl)}
-                  style={{ background: '#007bff', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: 6, cursor: 'pointer' }}
-                >
-                  Add
-                </button>
-                <label style={{ background: '#e9f3ff', color: '#007bff', border: '1px solid #b9d6ff', padding: '8px 12px', borderRadius: 6, cursor: 'pointer' }}>
-                  Upload
-                  <input
-                    type="file"
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    onChange={(e) => {
-                      const file = e.target.files && e.target.files[0];
-                      if (file) {
-                        const url = URL.createObjectURL(file);
-                        addAdImage(url);
-                      }
-                    }}
-                  />
-                </label>
-              </div>
-            </div>
-          </AdsSlide> */}
 
-{/* MODIFIED: NEW ADVERTISEMENT FORM SLIDE */}
-
-{isAdmin &&(
+{/* {isAdmin &&(
 <AdsSlide key="add-ad-form" style={{padding:10}}>
     <div style={{
-        /* Styling for the form container */
+     
         overflowY: 'auto' 
     }}>
         <h3 style={{ color: '#007bff', marginBottom: '15px' , textAlign:"center"}}>Create New Ad</h3>
@@ -1407,59 +1393,65 @@ const handleCategoryKeyPress = (e) => {
             
           <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Image (File Upload)</label>
-            <input type="file" name="imageFile" onChange={handleNewAdChange} /* ... */ />
+            <input type="file" name="imageFile" onChange={handleNewAdChange}  />
             </div>
            
             <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Ad Title*</label>
-            <input type="text" name="title" value={newAdFormData.title} onChange={handleNewAdChange} /* ... */ />
+            <input type="text" name="title" value={newAdFormData.title} onChange={handleNewAdChange}  />
             
             </div>
-            {/* Location (City) Input */}
+       
 
              <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Location (City)*</label>
-            <input type="text" name="city" value={newAdFormData.city} onChange={handleNewAdChange} /* ... */ />
+            <input type="text" name="city" value={newAdFormData.city} onChange={handleNewAdChange}  />
             </div>
-            {/* Description Input */}
+   
 
              <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Description</label>
-            <input type="text" name="description" value={newAdFormData.description} onChange={handleNewAdChange} /* ... */ />
+            <input type="text" name="description" value={newAdFormData.description} onChange={handleNewAdChange}  />
             </div>
 
-            {/* Button Text Input */}
+
              <div className='form-group'>
             <label style={{ fontWeight: 600 }}>Button Text</label>
-            <input type="text" name="buttonText" value={newAdFormData.buttonText} onChange={handleNewAdChange} /* ... */ />
+            <input type="text" name="buttonText" value={newAdFormData.buttonText} onChange={handleNewAdChange}  />
             </div>
             
-            {/* Submit Button */}
-            <button className='btn'  style={{border:"none", justifyContent:"center"}}    type="submit" /* ... */ >
+
+            <button className='btn'  style={{border:"none", justifyContent:"center"}}    type="submit"  >
                 Submit Ad
             </button>
         </form>
     </div>
 </AdsSlide>
-)}
+)} */}
         </AdsSliderContent>
 
-        <AdsPrevButton onClick={adsGoToPrev}>
-          <FaChevronLeft />
-        </AdsPrevButton>
-        <AdsNextButton onClick={adsGoToNext}>
-          <FaChevronRight />
-        </AdsNextButton>
+        {adsTotalSlides > 1 && (
+          <>
+            <AdsPrevButton onClick={adsGoToPrev}>
+              <FaChevronLeft />
+            </AdsPrevButton>
+            <AdsNextButton onClick={adsGoToNext}>
+              <FaChevronRight />
+            </AdsNextButton>
+          </>
+        )}
         
-        <AdsDotsContainer>
-          {Array.from({ length: adsTotalSlides }).map((_, index) => (
-            <AdsDot
-              key={index}
-              $active={index === adsCurrentIndex}
-              onClick={() => adsGoToSlide(index)}
-            />
-          ))}
-        </AdsDotsContainer>
+        {adsTotalSlides > 1 && (
+          <AdsDotsContainer>
+            {Array.from({ length: adsTotalSlides }).map((_, index) => (
+              <AdsDot
+                key={index}
+                $active={index === adsCurrentIndex}
+                onClick={() => adsGoToSlide(index)}
+              />
+            ))}
+          </AdsDotsContainer>
+        )}
       </RightSliderWrapper>
         )}
     </MainContainer>

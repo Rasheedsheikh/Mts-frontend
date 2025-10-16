@@ -32,15 +32,14 @@ const RegisterLanding = () => {
           onClick={() => navigate('/merchantRegistration')}
         />
         <Card
-          title="Vendor Registration"
-          description="Become a vendor and start receiving service requests."
-          onClick={() => navigate('/vendorStep1')}
+          title="Join Our Team"
+          description="Become a Partner and start registering merchants"
+          onClick={() => navigate('/partnerRegister')}
         />
         <Card
           title="User Registration"
           description="Create your account to book services quickly."
-          // onClick={() => navigate('/signup')}
-          tagText="Launching Soon"
+          onClick={() => navigate('/vendorStep1')}
         />
         <Card
           title="Free Booking"

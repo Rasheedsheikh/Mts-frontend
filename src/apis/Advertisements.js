@@ -42,6 +42,48 @@ export const createAdvertisement = async (formData) => {
     }
 };
 
+/**
+ * Updates an existing advertisement by ID.
+ * Accepts FormData so image changes are supported; omit image to keep existing.
+ */
+export const updateAdvertisement = async (advertisement_id, formData) => {
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/${advertisement_id}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Partially updates an existing advertisement by ID using PATCH method.
+ * Accepts FormData for partial updates; only sends changed fields.
+ */
+export const patchAdvertisement = async (advertisement_id, formData) => {
+  try {
+    const response = await axios.patch(
+      `${API_BASE_URL}/${advertisement_id}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // You would place other ad-related API calls here, like:
 // export const getAdvertisements = async () => { /* ... */ }; 
 // export const deleteAdvertisement = async (id) => { /* ... */ };
