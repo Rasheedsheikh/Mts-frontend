@@ -63,9 +63,11 @@ const Login = () => {
 
       // ✅ Redirect based on role
       const userRole = data.user.role?.toLowerCase();
-      if (userRole === "admin") navigate("/");
-      else if (userRole === "/") navigate("/");
-      else navigate("/");
+      if (userRole === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
 
     } catch (error) {
       console.error("Login Error:", error);

@@ -47,6 +47,9 @@ const PartnerRegistration = () => {
   // Candidate Name
   if (!data.candidateName) errors.candidateName = "Candidate name is required";
 
+  // Gender validation
+  if (!data.gender) errors.gender = "Gender selection is required";
+
   // Mobile Number (10 digits)
   if (!data.mobile) errors.mobile = "Mobile number is required";
   else if (!/^\d{10}$/.test(data.mobile)) errors.mobile = "Mobile number must be 10 digits";
@@ -94,13 +97,18 @@ const handleNext = () => {
     <div className="register-form-section">
       <h2>Partner Registration - Step 1</h2>
       <div className="form-group">
-        <label>Candidate Name*</label>
+        <label>Partner Name*</label>
         <input name="candidateName" value={formData.candidateName} onChange={handleChange} />
         {errors.candidateName && <p className="error">{errors.candidateName}</p>}
       </div>
       <div className="form-group">
-        <label>Gender</label>
-        <input name="gender" value={formData.gender} onChange={handleChange} />
+        <label>Gender*</label>
+        <select name="gender" value={formData.gender} onChange={handleChange}>
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        {errors.gender && <p className="error">{errors.gender}</p>}
       </div>
       <div className="form-group">
         <label>Mobile*</label>
@@ -124,7 +132,7 @@ const handleNext = () => {
       </div>
 
       <div className="button-group">
-        <button onClick={handleNext}>Next</button>
+        <button className="btn btn-send" onClick={handleNext}>Next</button>
       </div>
     </div>
      </div>

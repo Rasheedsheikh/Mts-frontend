@@ -5,6 +5,7 @@ import PartnerRegistrationpic from "../../../assets/register/5354443_2760424 1 (
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Base_url } from "../../../constants/constant";
 
 
 // SVG for the illustration (or you can use an image file)
@@ -54,6 +55,21 @@ const validateStep2 = (data) => {
   // Full Name as per Bank
   if (!data.fullNameAsPerBank) errors.fullNameAsPerBank = "Full name as per bank is required";
 
+  // DOB validation
+  if (!data.companyNameOrDob) errors.companyNameOrDob = "Date of birth is required";
+  else {
+    const selectedDate = new Date(data.companyNameOrDob);
+    const today = new Date();
+    const minAge = new Date();
+    minAge.setFullYear(today.getFullYear() - 18); // Must be at least 18 years old
+    
+    if (selectedDate > today) {
+      errors.companyNameOrDob = "Date of birth cannot be in the future";
+    } else if (selectedDate > minAge) {
+      errors.companyNameOrDob = "Must be at least 18 years old";
+    }
+  }
+
   // Bank Account Number (only digits, 9-18 digits typical)
   if (!data.bankAccountNumber) errors.bankAccountNumber = "Bank account number is required";
   else if (!/^\d{9,18}$/.test(data.bankAccountNumber))
@@ -74,8 +90,8 @@ const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    const API_BASE = process.env.REACT_APP_API_BASE_URL || '';
-    const responseUrl = `${API_BASE}/partner-details`;
+   
+    const responseUrl = `${Base_url}/partner-details`;
 
     const formDataToSend = new FormData();
 
@@ -146,14 +162,20 @@ if (result?.partnerCode) {
       <h2>Partner Registration - Step 2</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Full Name (Bank)*</label>
+          <label>Full Name ( As Per Bank)*</label>
           <input name="fullNameAsPerBank" value={formData.fullNameAsPerBank} onChange={handleChange} />
           {errors.fullNameAsPerBank && <p className="error">{errors.fullNameAsPerBank}</p>}
         </div>
 
         <div className="form-group">
           <label>DOB*</label>
-          <input name="companyNameOrDob" value={formData.companyNameOrDob} onChange={handleChange} />
+          <input 
+            type="date" 
+            name="companyNameOrDob" 
+            value={formData.companyNameOrDob} 
+            onChange={handleChange}
+            max={new Date().toISOString().split('T')[0]}
+          />
           {errors.companyNameOrDob && <p className="error">{errors.companyNameOrDob}</p>}
         </div>
 
@@ -187,7 +209,7 @@ if (result?.partnerCode) {
         </div>
 
         <div className="form-group">
-          <label>Upload Image</label>
+          <label>Upload Profile</label>
           <input type="file" onChange={handleFileChange} />
         </div>
 

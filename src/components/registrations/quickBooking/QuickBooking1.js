@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import './QuickBooking1.css';
 import quickbook from "../../../assets/register/5354443_2760424 1 (1).png";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { Base_url } from "../../../constants/constant"
 
 const Illustration = () => (
   <div className="illustration-wrapper">
@@ -17,21 +17,6 @@ const Illustration = () => (
   </div>
 );
 
-const categories = [
-  'Auto Care',
-  'Laptops',
-  'Washing Machine',
-  'Cleaning',
-  'Other Services'
-];
-
-const shops = [
-  'Tech Repair Shop A',
-  'MTS Auto Service',
-  'Sparkling Cleaners',
-  'General Services'
-];
-
 const QuickBooking1 = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -42,6 +27,49 @@ const QuickBooking1 = () => {
     shop: '',
     location:''
   });
+
+  const [categories, setCategories] = useState([]);
+  const [shops, setShops] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // API function to fetch categories and shops
+  const fetchCategoriesAndShops = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${Base_url}/merchant-details/meta/categories-shops`);
+      
+      console.log('API Response:', response.data); // Debug log
+      
+      if (response.data) {
+        // Based on your response structure:
+        // { categories: [...], shopNames: [...] }
+        const { categories: apiCategories, shopNames: apiShops } = response.data;
+        
+        setCategories(apiCategories || []);
+        setShops(apiShops || []);
+        
+        console.log('Categories loaded:', apiCategories);
+        console.log('Shops loaded:', apiShops);
+      } else {
+        // Fallback to empty arrays if API fails
+        setCategories([]);
+        setShops([]);
+        toast.error('Failed to load categories and shops');
+      }
+    } catch (error) {
+      console.error('Error fetching categories and shops:', error);
+      setCategories([]);
+      setShops([]);
+      toast.error('Failed to load categories and shops');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchCategoriesAndShops();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,7 +85,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await fetch("http://localhost:3000/free-bookings", {
+    const response = await fetch(`${Base_url}/free-bookings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -67,7 +95,7 @@ const handleSubmit = async (e) => {
         category: formData.category,
         shop: formData.shop,
         message: formData.message,
-        location: "Hyderabad",
+        location: formData.location,
       }),
     });
 
@@ -82,6 +110,7 @@ const handleSubmit = async (e) => {
         message: "",
         category: "",
         shop: "",
+        location:''
       });
     } else {
       toast.error(result.message || "Failed to submit booking.");
@@ -123,7 +152,25 @@ const handleSubmit = async (e) => {
           <div className="divider"></div>
 
           <div className="form-section">
-            <h2 className="form-title">Free Booking</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 className="form-title">Free Booking</h2>
+              <button 
+                type="button" 
+                onClick={fetchCategoriesAndShops}
+                disabled={loading}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.6 : 1
+                }}
+              >
+                {loading ? 'Loading...' : 'Refresh'}
+              </button>
+            </div>
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -187,10 +234,13 @@ const handleSubmit = async (e) => {
                   value={formData.category}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 >
-                  <option value="" disabled>Select a category</option>
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
+                  <option value="" disabled>
+                    {loading ? 'Loading categories...' : 'Select a category'}
+                  </option>
+                  {categories.map((cat, index) => (
+                    <option key={index} value={cat}>
                       {cat}
                     </option>
                   ))}
@@ -205,10 +255,13 @@ const handleSubmit = async (e) => {
                   value={formData.shop}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 >
-                  <option value="" disabled>Select a shop</option>
-                  {shops.map((shop) => (
-                    <option key={shop} value={shop}>
+                  <option value="" disabled>
+                    {loading ? 'Loading shops...' : 'Select a shop'}
+                  </option>
+                  {shops.map((shop, index) => (
+                    <option key={index} value={shop}>
                       {shop}
                     </option>
                   ))}

@@ -31,6 +31,7 @@ import PartnerRegistration1 from './components/registrations/partner/PartnerRegi
 import PartnerRegistration2 from './components/registrations/partner/PartnerRegistration2';
 import PartnerSuccess from './components/registrations/partner/PartnerSuccess';
 import AdminDashboard from './components/admin/AdminDashboard';
+import AdminRoute from './components/auth/AdminRoute';
 // import PaymentGateway2 from './components/registrations/payments/paymentGateway2';
 
 
@@ -85,7 +86,7 @@ function AppContent() {
               <Route path='/partnerRegister' element={<PartnerRegistration/>}/>
                <Route path='/partnerRegister2' element={<PartnerRegistration2/>}/>
                <Route path="/partnerSuccess" element={<PartnerSuccess />} />
-               <Route path="/admin" element={<AdminDashboard />} />
+               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
 
                <Route path='/payment' element={<PaymentGateway/>}/>
                    <Route path='/vendorStep1' element={<Vendorstep1/>}/>
