@@ -3,13 +3,12 @@
 # ======================
 # Deployment variables
 # ======================
-REMOTE_USER="ubuntu"                  # Remote server username
-REMOTE_HOST="3.7.251.62"              # Remote server IP
-REMOTE_APP_NAME="mts-frontend"        # Docker container name
-LOCAL_IMAGE_NAME="mts-frontend:latest" # Local Docker image tag
-REMOTE_IMAGE_NAME="mts-frontend:latest" # Remote Docker image tag
-REMOTE_PORT=80                         # Port to expose on the server
-PEM_KEY="./web-server.pem"             # Path to your PEM key file
+REMOTE_USER="ubuntu"                         # Remote server username
+REMOTE_HOST="43.205.83.216"                  # Elastic IP (permanent)
+REMOTE_APP_NAME="mts-frontend"               # Docker container name
+IMAGE_NAME="mts-frontend:latest"             # Image name (same local & remote)
+REMOTE_PORT=9000                             # Port to expose inside container
+PEM_KEY="./web-server.pem"                   # Path to your PEM key file
 
 # SSH options
 SSH_OPTS="-i $PEM_KEY -o StrictHostKeyChecking=no"
@@ -18,22 +17,37 @@ SSH_OPTS="-i $PEM_KEY -o StrictHostKeyChecking=no"
 # Deployment steps
 # ======================
 
-echo "🚀 Starting React app deployment to $REMOTE_HOST..."
+echo "🚀 Starting optimized deployment to $REMOTE_HOST..."
 
-# Step 1: Build Docker image locally
+# Step 1: Build image locally
 echo "🐳 Building Docker image locally..."
-docker build -t $LOCAL_IMAGE_NAME .
+docker build -t $IMAGE_NAME .
 
-# Step 2: Save and send image to remote server
-echo "📦 Sending image to remote server..."
-docker save $LOCAL_IMAGE_NAME | ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "docker load"
+# Step 2: Stop container + remove old image on remote
+echo "🧹 Cleaning old containers and images on remote..."
+ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "
+  docker stop $REMOTE_APP_NAME >/dev/null 2>&1 || true
+  docker rm $REMOTE_APP_NAME >/dev/null 2>&1 || true
+  docker image rm $IMAGE_NAME >/dev/null 2>&1 || true
+"
 
-# Step 3: Stop and remove existing container (if any)
-echo "🛑 Stopping existing container (if any)..."
-ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "docker rm -f $REMOTE_APP_NAME || true"
+# Step 3: Transfer image efficiently
+echo "📦 Sending new image to remote server..."
+docker save $IMAGE_NAME | gzip | ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "gunzip | docker load"
 
 # Step 4: Run new container
-echo "🚢 Starting new container..."
-ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "docker run -d --name $REMOTE_APP_NAME -p $REMOTE_PORT:80 $REMOTE_IMAGE_NAME"
+echo "🚢 Starting fresh container..."
+ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "
+  docker run -d \
+    --name $REMOTE_APP_NAME \
+    --network traefik-net \
+    -p 9000:9000 \
+    $IMAGE_NAME
+"
 
-echo "✅ Deployment complete! App running on http://$REMOTE_HOST/"
+# Step 5: Optional — remove dangling images on remote
+echo "🧼 Removing unused Docker images (optional cleanup)..."
+ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "docker image prune -f >/dev/null 2>&1"
+
+echo "✅ Deployment complete!"
+echo "🌐 App is live at https://mytownservice.in/"

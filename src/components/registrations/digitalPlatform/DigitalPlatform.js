@@ -52,48 +52,48 @@ const DigitalPlatform = () => {
   };
 
   // Handle form submission
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validate()) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
 
-  setLoading(true);
-  try {
-    const payload = {
-      name: formData.name,
-      mobileNumber: formData.mobileNumber,
-      // email: formData.email, // optional if not needed
-      socialMedia: formData.socialMedia,
-    };
+    setLoading(true);
+    try {
+      const payload = {
+        name: formData.name,
+        mobileNumber: formData.mobileNumber,
+        // email: formData.email, // optional if not needed
+        socialMedia: formData.socialMedia,
+      };
 
-    console.log("📤 Sending data:", payload);
+      console.log("📤 Sending data:", payload);
 
-    const response = await axios.post(`${Base_url}/digital-marketing`, payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      const response = await axios.post(`${Base_url}/digital-marketing`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    console.log("✅ Registration successful:", response.data);
+      console.log("✅ Registration successful:", response.data);
 
-    alert("Registration successful!");
-    navigate("/merchantRegistration2"); // Redirect on success
-  } catch (error) {
-    console.error("❌ Error submitting registration:", error);
+      alert("Registration successful!");
+      navigate("/merchantRegistration2"); // Redirect on success
+    } catch (error) {
+      console.error("❌ Error submitting registration:", error);
 
-    if (error.response) {
-      // Server responded with an error status code
-      alert(`Error ${error.response.status}: ${error.response.data?.message || "Something went wrong"}`);
-    } else if (error.request) {
-      // No response received
-      alert("No response from server. Please check your network or backend server.");
-    } else {
-      // Other errors
-      alert(`Error: ${error.message}`);
+      if (error.response) {
+        // Server responded with an error status code
+        alert(`Error ${error.response.status}: ${error.response.data?.message || "Something went wrong"}`);
+      } else if (error.request) {
+        // No response received
+        alert("No response from server. Please check your network or backend server.");
+      } else {
+        // Other errors
+        alert(`Error: ${error.message}`);
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   // Handle cancel
@@ -101,7 +101,7 @@ const handleSubmit = async (e) => {
     setFormData({
       name: '',
       mobileNumber: '',
-    //   email: '',
+      //   email: '',
       socialMedia: '',
     });
   };

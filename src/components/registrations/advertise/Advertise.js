@@ -89,7 +89,7 @@ const Advertise = () => {
 
   return (
     <div className='booking-parent1'>
-         <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="booking-container">
         <h1 className="main-title">Advertise With Us</h1>
         <p className="subtitle">Promote your brand — get featured on My Town Service!</p>

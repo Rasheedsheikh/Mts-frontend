@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 
 // SVG for the illustration (or you can use an image file)
 const Illustration = () => (
- <div className="illustration-wrapper">
- <img src={MerchantRegistrationpic} alt="Verify Your Email Illustration" style={{ maxWidth: '100%', height: 'auto' }} />
- </div>
+  <div className="illustration-wrapper">
+    <img src={MerchantRegistrationpic} alt="Verify Your Email Illustration" style={{ maxWidth: '100%', height: 'auto' }} />
+  </div>
 );
 
 export default function MerchantRegistration2() {

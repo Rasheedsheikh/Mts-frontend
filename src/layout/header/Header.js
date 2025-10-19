@@ -94,15 +94,15 @@ const Header = () => {
       <div className="header-actions desktop-only">
         {isLoggedIn ? (
           <div>
-          <Button type="primary" className="logout-button" onClick={handleLogout}>
-            Logout
-          </Button>
-          
+            <Button type="primary" className="logout-button" onClick={handleLogout}>
+              Logout
+            </Button>
 
-             <Button className="register-button" onClick={handleRegisterClick}>
+
+            <Button className="register-button" onClick={handleRegisterClick}>
               Register
             </Button>
-            </div>
+          </div>
         ) : (
           <>
             <Button type="primary" className="login-button" onClick={handleLoginClick}>
@@ -152,9 +152,9 @@ const Header = () => {
                 Logout
               </Button>
 
-                <Button block className="register-button" onClick={handleRegisterClick}>
-                  Register
-                </Button>
+              <Button block className="register-button" onClick={handleRegisterClick}>
+                Register
+              </Button>
             </Menu.Item>
           ) : (
             <>
